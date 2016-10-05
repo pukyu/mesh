@@ -3,6 +3,7 @@ package jp.co.gnavi.meshclient.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import jp.co.gnavi.meshclient.R;
@@ -20,6 +21,15 @@ public class MainActivity extends BaseActivity {
     private String  mstrMeshMacAddress = null;
 
     private BluetoothClientThread   mClientThread;
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent( intent );
+
+        String strData = intent.getStringExtra( "mesh_data" );
+        TextView text = (TextView)findViewById( R.id.mesh_data );
+        text.setText( strData );
+    }
 
 
     @Override
@@ -103,6 +113,10 @@ public class MainActivity extends BaseActivity {
             Toast.makeText( getApplicationContext(), getResources().getString( R.string.mesh_unknown ), Toast.LENGTH_LONG ).show();
             return;
         }
+
+        TextView text = (TextView)findViewById(R.id.mesh_data);
+        text.setText(mstrMeshMacAddress);
+
 /*
         mClientThread = new BluetoothClientThread( getApplicationContext(), "", , null );
         mClientThread.start();

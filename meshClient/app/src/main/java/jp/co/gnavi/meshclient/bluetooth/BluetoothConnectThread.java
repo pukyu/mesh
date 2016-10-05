@@ -76,7 +76,7 @@ public class BluetoothConnectThread extends Thread {
             }
 
             Intent i = new Intent(mContext, MainActivity.class);
-            i.putExtra("NUMBER", rcvNum);
+            i.putExtra("mesh_data", rcvNum);
             mContext.startActivity(i);
         }
     }

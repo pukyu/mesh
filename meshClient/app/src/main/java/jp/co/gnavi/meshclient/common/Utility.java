@@ -63,13 +63,17 @@ public class Utility {
         }
 
         // TODO:MESH を探して MacAddress を返却する
+        String strMacAddress = "";
         for( BluetoothDevice device : pairedDevices ) {
+            strMacAddress += ( "Name:" + device.getName() );
+            strMacAddress += ( " Address:" + device.getAddress() + "\n");
+
             String strName = device.getName();
             String strAddress = device.getAddress();
             Toast.makeText( context, "Name:" + strName + " address:" + strAddress, Toast.LENGTH_LONG ).show();
         }
 
-        return "12345";
+        return strMacAddress;
     }
 
     /**

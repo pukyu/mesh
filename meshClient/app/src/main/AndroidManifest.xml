@@ -30,6 +30,13 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" >
         </activity>
+
+        <activity
+            android:name="jp.co.gnavi.meshclient.activity.BaseActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" >
+        </activity>
+
     </application>
 
 </manifest>
