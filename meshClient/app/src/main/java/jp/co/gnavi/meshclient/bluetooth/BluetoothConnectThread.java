@@ -22,6 +22,9 @@ public class BluetoothConnectThread extends Thread {
     private String sendNumber;
     private Context mContext;
 
+    private Boolean     mbRunnning = true;
+
+
     //コンストラクタの定義
     public BluetoothConnectThread(Context context, BluetoothSocket socket, String string){
         sendNumber = string;
@@ -59,7 +62,7 @@ public class BluetoothConnectThread extends Thread {
             e.printStackTrace();
         }
 */
-        while(true){
+        while(mbRunnning){
             try {
                 tmpBuf = in.read(buf);
             } catch (IOException e) {
@@ -80,4 +83,10 @@ public class BluetoothConnectThread extends Thread {
             mContext.startActivity(i);
         }
     }
+
+    public void stopRunnning()
+    {
+        mbRunnning = false;
+    }
+
 }

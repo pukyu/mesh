@@ -21,6 +21,8 @@ public class BluetoothClientThread extends Thread {
     static BluetoothAdapter myClientAdapter;
     public String myNumber;
 
+    BluetoothConnectThread  mConnection = null;
+
     //コンストラクタ定義
     public BluetoothClientThread(Context context, String myNum , BluetoothDevice device, BluetoothAdapter btAdapter){
         //各種初期化
@@ -59,12 +61,13 @@ public class BluetoothClientThread extends Thread {
         }
 
         //接続完了時の処理
-        BluetoothConnectThread rw = new BluetoothConnectThread(mContext, clientSocket, myNumber);
-        rw.start();
+        mConnection = new BluetoothConnectThread(mContext, clientSocket, myNumber);
+        mConnection.start();
     }
 
     public void cancel() {
         try {
+            mConnection.stopRunnning();
             clientSocket.close();
         } catch (IOException e) {
             e.printStackTrace();

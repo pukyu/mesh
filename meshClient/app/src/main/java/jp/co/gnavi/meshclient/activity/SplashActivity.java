@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import jp.co.gnavi.meshclient.R;
+import jp.co.gnavi.meshclient.common.Utility;
 
 /**
  * Created by kaifuku on 2016/10/05.
@@ -48,13 +49,14 @@ public class SplashActivity extends BaseActivity {
      * 初期化
      */
     private void initialize() {
+        Utility.initialize();
+
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 goToNext();
             }
         };
-
         new Handler().postDelayed( runnable, 3000 );
     }
 

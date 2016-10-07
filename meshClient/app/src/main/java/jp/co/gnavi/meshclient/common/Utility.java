@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.util.Set;
@@ -14,9 +15,48 @@ import java.util.Set;
  */
 public class Utility {
     private static BluetoothAdapter mBluetoothAdapter;
+    // todo:他の MESH 端末も同じ数値かチェック（数値の意味チェック）
+    private final static String MESH_NAME = "MESH-100BU1001883";
 
-    public Utility() {
+    /**
+     * 初期化
+     */
+    public static final void initialize() {
+        // コンストラクタでやらせたら、準備が間に合わず null が確実に来たので。。。
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+    }
+
+    /**
+     * ログ出力
+     * @param strTag
+     * @param strLogMessage
+     * @param iLogType
+     *
+     * @note    リリースビルドでログが自動で消える
+     */
+    public static final void customLog( String strTag, String strLogMessage, int iLogType ) {
+
+        switch( iLogType )
+        {
+            case Log.DEBUG:
+                Log.d( strTag, strLogMessage );
+                break;
+            case Log.INFO:
+                Log.i( strTag, strLogMessage );
+                break;
+            case Log.VERBOSE:
+                Log.v( strTag, strLogMessage );
+                break;
+            case Log.WARN:
+                Log.w( strTag, strLogMessage );
+                break;
+            case Log.ERROR:
+                Log.e( strTag, strLogMessage );
+                break;
+            case Log.ASSERT:
+                Log.wtf( strTag, strLogMessage );
+                break;
+        }
     }
 
     /**
@@ -48,9 +88,9 @@ public class Utility {
 
     /**
      * Bluetooth でペアとなっているデバイスを返す
-     * @return  MacAddress（失敗時 null）
+     * @return  BluetoothDevice（失敗時 null）
      */
-    public static final String getPairDeviceList( Context context ) {
+    public static final BluetoothDevice getPairDeviceList( Context context ) {
         if( !canUseBluetooth() ) {
             return null;
         }
@@ -62,18 +102,15 @@ public class Utility {
             return null;
         }
 
-        // TODO:MESH を探して MacAddress を返却する
-        String strMacAddress = "";
+        BluetoothDevice bDevice = null;
         for( BluetoothDevice device : pairedDevices ) {
-            strMacAddress += ( "Name:" + device.getName() );
-            strMacAddress += ( " Address:" + device.getAddress() + "\n");
-
-            String strName = device.getName();
-            String strAddress = device.getAddress();
-            Toast.makeText( context, "Name:" + strName + " address:" + strAddress, Toast.LENGTH_LONG ).show();
+            if( MESH_NAME.compareTo( device.getName() ) == 0 ) {
+                bDevice = device;
+                break;
+            }
         }
 
-        return strMacAddress;
+        return bDevice;
     }
 
     /**

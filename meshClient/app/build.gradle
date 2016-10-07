@@ -1,21 +1,43 @@
 apply plugin: 'com.android.application'
 
+def PACKAGE_NAME = "jp.co.gnavi.meshclient"
+
 android {
     compileSdkVersion 24
     buildToolsVersion "24.0.0"
 
     defaultConfig {
-        applicationId "jp.co.gnavi.meshclient"
+//        applicationId "jp.co.gnavi.meshclient"
         minSdkVersion 21
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
     }
+
     buildTypes {
+        debug {
+//            applicationIdSuffix "_debug"
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            applicationIdSuffix "_release"
         }
+    }
+
+    productFlavors {
+        dev {
+            applicationId "${PACKAGE_NAME}"
+            manifestPlaceholders = [appName: "MESH 開発"];
+        }
+        rel {
+            applicationId "${PACKAGE_NAME}"
+            manifestPlaceholders = [appName: "MESH"];
+        }
+    }
+
+    lintOptions {
+        abortOnError false
     }
 }
 
@@ -23,4 +45,6 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:24.1.0'
+    compile 'com.google.android.gms:play-services:9.0.0'
+    compile 'com.android.support:multidex:1.0.0'
 }
