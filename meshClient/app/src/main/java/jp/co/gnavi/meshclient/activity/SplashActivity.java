@@ -64,7 +64,7 @@ public class SplashActivity extends BaseActivity {
      * 次の画面へ
      */
     private void goToNext() {
-        Intent intent = new Intent( this, MainActivity.class );
+        Intent intent = new Intent( this, WaitActivity.class );
         intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP );
         startActivity( intent );
     }

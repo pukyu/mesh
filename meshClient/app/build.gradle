@@ -7,7 +7,8 @@ android {
     buildToolsVersion "24.0.0"
 
     defaultConfig {
-//        applicationId "jp.co.gnavi.meshclient"
+        applicationId "jp.co.gnavi.meshclient"
+//        applicationId PACKAGE_NAME
         minSdkVersion 21
         targetSdkVersion 24
         versionCode 1
@@ -16,7 +17,7 @@ android {
 
     buildTypes {
         debug {
-//            applicationIdSuffix "_debug"
+//            applicationIdSuffix "_dev"
         }
         release {
             minifyEnabled false
@@ -27,11 +28,11 @@ android {
 
     productFlavors {
         dev {
-            applicationId "${PACKAGE_NAME}"
+ //           applicationId "${PACKAGE_NAME}"
             manifestPlaceholders = [appName: "MESH 開発"];
         }
         rel {
-            applicationId "${PACKAGE_NAME}"
+ //           applicationId "${PACKAGE_NAME}"
             manifestPlaceholders = [appName: "MESH"];
         }
     }

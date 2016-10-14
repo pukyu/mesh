@@ -38,12 +38,18 @@
             android:screenOrientation="portrait" >
         </activity>
 
+        <activity
+            android:name="jp.co.gnavi.meshclient.activity.WaitActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" >
+        </activity>
+
         <receiver
             android:name="jp.co.gnavi.meshclient.gcm.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <category android:name="${applicationId}" />
+                <category android:name="jp.co.gnavi.meshclient" />
             </intent-filter>
         </receiver>
         <service android:name="jp.co.gnavi.meshclient.gcm.GcmIntentService" />
