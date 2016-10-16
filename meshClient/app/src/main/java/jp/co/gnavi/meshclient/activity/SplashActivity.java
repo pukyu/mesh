@@ -15,7 +15,7 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.splash );
+        setContentView( R.layout.splash );
     }
 
     @Override
@@ -64,9 +64,11 @@ public class SplashActivity extends BaseActivity {
      * 次の画面へ
      */
     private void goToNext() {
-        Intent intent = new Intent( this, WaitActivity.class );
+//        Intent intent = new Intent( this, WaitActivity.class );
+        Intent intent = new Intent( this, SelectAcitivity.class );
         intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP );
         startActivity( intent );
+        overridePendingTransition(0, 0);
     }
 
 }

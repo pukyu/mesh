@@ -4,11 +4,12 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+<!--
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <uses-permission android:name="android.permission.BLUETOOTH"></uses-permission>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"></uses-permission>
-
+-->
     <application
         android:allowBackup="true"
         android:icon="@drawable/icon"
@@ -40,6 +41,12 @@
 
         <activity
             android:name="jp.co.gnavi.meshclient.activity.WaitActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <activity
+            android:name="jp.co.gnavi.meshclient.activity.SelectAcitivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" >
         </activity>
