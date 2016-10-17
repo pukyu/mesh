@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
     android:background="@color/black">
 
@@ -32,34 +33,34 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/status_layout"
-        android:layout_marginTop="40dp">
+        android:layout_marginTop="10dp">
 
         <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_centerInParent="true"
+            android:layout_centerInParent="false"
             android:background="@color/themeColor"
             android:layout_height="1dp"
-            android:id="@+id/line_view">
+            android:id="@+id/line_view_left"
+            android:layout_centerHorizontal="false"
+            android:layout_centerVertical="true"
+            android:layout_width="match_parent"
+            android:layout_alignRight="@+id/status_left"
+            android:layout_marginRight="13dp">
 
         </FrameLayout>
 
-        <TextView
-            android:text="WAIT"
-            android:layout_height="wrap_content"
-            android:id="@+id/state_title"
-            android:layout_centerInParent="true"
-            android:lines="1"
-            android:textColor="@color/themeColor"
-            android:textSize="30sp"
-            android:textStyle="bold|italic"
-            android:ellipsize="end"
-            android:textAlignment="center"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:gravity="center_vertical"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:layout_width="100dp" />
+        <FrameLayout
+            android:layout_centerInParent="false"
+            android:background="@color/themeColor"
+            android:layout_height="1dp"
+            android:id="@+id/line_view_right"
+            android:layout_centerHorizontal="false"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="13dp"
+            android:layout_alignLeft="@+id/status_right">
+
+        </FrameLayout>
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -71,24 +72,24 @@
             android:layout_centerVertical="true">
 
             <ImageView
-                android:layout_width="20dp"
                 android:layout_height="wrap_content"
                 android:src="@drawable/gu_b_r"
-                android:id="@+id/right_arrow_3" />
+                android:id="@+id/right_arrow_3"
+                android:layout_width="20dp"/>
 
             <ImageView
-                android:layout_width="20dp"
                 android:layout_height="wrap_content"
                 android:src="@drawable/gu_b_r"
                 android:id="@+id/right_arrow_2"
-                android:layout_toRightOf="@+id/right_arrow_3" />
+                android:layout_toRightOf="@+id/right_arrow_3"
+                android:layout_width="20dp"/>
 
             <ImageView
-                android:layout_width="20dp"
                 android:layout_height="wrap_content"
                 android:src="@drawable/gu_b_r"
                 android:id="@+id/right_arrow_1"
-                android:layout_toRightOf="@+id/right_arrow_2" />
+                android:layout_toRightOf="@+id/right_arrow_2"
+                android:layout_width="20dp"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -100,25 +101,43 @@
             android:layout_centerVertical="true">
 
             <ImageView
-                android:layout_width="20dp"
                 android:layout_height="wrap_content"
                 android:src="@drawable/gu_b_l"
-                android:id="@+id/left_arrow_1" />
+                android:id="@+id/left_arrow_1"
+                android:layout_width="20dp"/>
 
             <ImageView
-                android:layout_width="20dp"
                 android:layout_height="wrap_content"
                 android:src="@drawable/gu_b_l"
                 android:id="@+id/left_arrow_2"
-                android:layout_toRightOf="@+id/left_arrow_1" />
+                android:layout_toRightOf="@+id/left_arrow_1"
+                android:layout_width="20dp"/>
 
             <ImageView
-                android:layout_width="20dp"
                 android:layout_height="wrap_content"
                 android:src="@drawable/gu_b_l"
                 android:id="@+id/left_arrow_3"
-                android:layout_toRightOf="@+id/left_arrow_2" />
+                android:layout_toRightOf="@+id/left_arrow_2"
+                android:layout_width="20dp"/>
         </RelativeLayout>
+
+        <TextView
+            android:text="WAIT"
+            android:layout_height="wrap_content"
+            android:id="@+id/state_title"
+            android:lines="1"
+            android:textColor="@color/themeColor"
+            android:ellipsize="end"
+            android:textAlignment="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:layout_width="120dp"
+            android:textSize="35dp"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"/>
 
     </RelativeLayout>
 
@@ -183,17 +202,45 @@
         android:layout_width="match_parent"
         android:id="@+id/state_detail"
         android:layout_below="@+id/status_layout"
-        android:layout_height="40dp"
-        android:layout_marginTop="5dp">
+        android:layout_height="70dp">
 
         <TextView
-            android:text="分"
+            android:text="上司着席待"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textView3"
+            android:id="@+id/sub_title"
+            android:textColor="@color/gray"
+            android:textSize="18dp"
+            android:layout_centerHorizontal="true"
+            />
+
+        <TextView
+            android:text="WAIT TIME"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView4"
+            android:textColor="@color/themeColor"
+            android:textSize="15dp"
+            android:layout_above="@+id/about_text"
+            android:layout_alignRight="@+id/about_text"/>
+
+        <TextView
+            android:text="MINUTES"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView2"
+            android:textColor="@color/themeColor"
+            android:textSize="15dp"
+            android:layout_above="@+id/minute_text"
+            android:layout_alignLeft="@+id/minute_text"/>
+
+        <TextView
+            android:text="分待"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/minute_text"
             android:layout_toRightOf="@+id/wait_time"
             android:textSize="18dp"
-            android:textStyle="bold"
             android:textColor="@color/white"
             android:layout_centerVertical="false"
             android:layout_alignParentBottom="true" />
@@ -208,15 +255,18 @@
             android:textStyle="bold"
             android:textAlignment="center"
             android:layout_width="120dp"
-            android:textSize="35dp" />
+            android:textSize="35dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/text_frame"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"/>
 
         <TextView
-            android:text="開始まで"
+            android:text="大体"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textView"
+            android:id="@+id/about_text"
             android:textColor="@color/white"
-            android:textStyle="bold"
             android:textSize="18dp"
             android:layout_toLeftOf="@+id/wait_time"
             android:layout_centerInParent="false"
@@ -228,34 +278,88 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/user_status"
+        android:layout_marginBottom="10dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="40dp">
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:text="？？？？"
-            android:layout_height="wrap_content"
-            android:id="@+id/user_name"
-            android:textColor="@color/white"
-            android:textSize="25dp"
-            android:textStyle="bold"
-            android:ellipsize="end"
-            android:layout_width="200dp"
-            android:layout_centerHorizontal="true"
-            android:textAlignment="center"
-            android:layout_below="@+id/group_name" />
-
-        <TextView
-            android:text="○○部"
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/group_name"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:textSize="25dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp" />
+            android:layout_centerInParent="true">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="false"
+                android:id="@+id/target_layout"
+                android:layout_centerHorizontal="true">
+
+                <TextView
+                    android:text="Target"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/target_title"
+                    android:layout_centerHorizontal="true"
+                    android:textColor="@color/themeColor"
+                    android:textSize="15dp"/>
+
+                <TextView
+                    android:text="？？？？"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/user_name"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:ellipsize="end"
+                    android:layout_width="200dp"
+                    android:layout_centerHorizontal="true"
+                    android:textAlignment="center"
+                    android:layout_below="@+id/group_name"
+                    android:textSize="28dp"/>
+
+                <TextView
+                    android:text="○○部"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/group_name"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginRight="40dp"
+                    android:layout_below="@+id/target_title"
+                    android:textSize="18dp"
+                    android:layout_centerInParent="true"
+                    android:ellipsize="end"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/infor_layout"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/target_layout">
+
+                <TextView
+                    android:text="Information"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/infor_title"
+                    android:textColor="@color/themeColor"
+                    android:textSize="15dp"
+                    android:layout_centerHorizontal="true"/>
+
+                <TextView
+                    android:text="他部下３名待機中..."
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/infor_text"
+                    android:layout_centerInParent="true"
+                    android:layout_below="@+id/infor_title"
+                    android:textColor="@color/white"
+                    android:textSize="18dp"/>
+            </RelativeLayout>
+        </RelativeLayout>
+
     </RelativeLayout>
 
 </RelativeLayout>

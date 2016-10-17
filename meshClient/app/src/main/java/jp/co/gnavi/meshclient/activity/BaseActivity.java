@@ -4,16 +4,27 @@ import android.app.Activity;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.widget.ImageView;
 
 import jp.co.gnavi.meshclient.R;
+import jp.co.gnavi.meshclient.common.Utility;
 
 /**
  * Created by kaifuku on 2016/10/05.
  */
 public class BaseActivity extends Activity {
     private SoundPool mSoundPool = null;
+
+    // 上部矢印アニメーションのそれぞれの開始間隔
+    private static final int ARROW_DELAY = 400;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +84,162 @@ public class BaseActivity extends Activity {
             return;
         }
 
-        mSoundPool.play(iSoundId, 1.0f, 1.0f, 0, 0, 1.0f);
+//        mSoundPool.play(iSoundId, 1.0f, 1.0f, 0, 0, 1.0f);
     }
 
+    /**
+     * 矢印がある画面でのみ使うこと
+     */
+    protected void startArrowAnimation()
+    {
+        ImageView leftArrow = (ImageView)findViewById(R.id.left_arrow_3);
+        setRoopFlowAlphaAnimation(leftArrow, ALPHA_DOWN_ANIM);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ImageView leftArrow = (ImageView)findViewById(R.id.left_arrow_2);
+                setRoopFlowAlphaAnimation(leftArrow, ALPHA_DOWN_ANIM);
+            }
+        }, ARROW_DELAY );
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ImageView leftArrow = (ImageView)findViewById(R.id.left_arrow_1);
+                setRoopFlowAlphaAnimation(leftArrow, ALPHA_DOWN_ANIM);
+            }
+        }, ARROW_DELAY*2 );
+
+        ImageView rightArrow = (ImageView)findViewById(R.id.right_arrow_3);
+        setRoopFlowAlphaAnimation(rightArrow, ALPHA_DOWN_ANIM);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ImageView rightArrow = (ImageView)findViewById(R.id.right_arrow_2);
+                setRoopFlowAlphaAnimation(rightArrow, ALPHA_DOWN_ANIM);
+            }
+        }, ARROW_DELAY );
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ImageView rightArrow = (ImageView)findViewById(R.id.right_arrow_1);
+                setRoopFlowAlphaAnimation(rightArrow, ALPHA_DOWN_ANIM);
+            }
+        }, ARROW_DELAY*2 );
+
+        View lineViewLeft = (View)findViewById(R.id.line_view_left);
+        setRoopLineAlphaAnimation(lineViewLeft, ALPHA_DOWN_ANIM);
+
+        View lineViewRight = (View)findViewById(R.id.line_view_right);
+        setRoopLineAlphaAnimation(lineViewRight, ALPHA_DOWN_ANIM);
+    }
+
+    protected static final int ALPHA_DOWN_ANIM = 0;
+    protected static final int ALPHA_UP_ANIM = ALPHA_DOWN_ANIM + 1;
+
+    protected static final int LINE_ALPHA_ANIM_DURATION = 500;
+
+    protected void setRoopLineAlphaAnimation(final View view, final int iAnimType )
+    {
+        AlphaAnimation alpha;
+        if( iAnimType == ALPHA_DOWN_ANIM )
+        {
+            alpha = new AlphaAnimation( 1.0f, 0.9f );
+            alpha.setDuration( LINE_ALPHA_ANIM_DURATION );
+        }
+        else if( iAnimType == ALPHA_UP_ANIM )
+        {
+            alpha = new AlphaAnimation( 0.9f, 1.0f );
+            alpha.setDuration( LINE_ALPHA_ANIM_DURATION );
+        }
+        else
+        {
+            return;
+        }
+        alpha.setInterpolator( new LinearInterpolator() );
+        alpha.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                if( iAnimType == ALPHA_DOWN_ANIM )
+                {
+                    setRoopFlowAlphaAnimation( view, ALPHA_UP_ANIM );
+                }
+                else if( iAnimType == ALPHA_UP_ANIM )
+                {
+                    setRoopFlowAlphaAnimation( view, ALPHA_DOWN_ANIM );
+                }
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        view.setAnimation( alpha );
+    }
+
+    protected static final int FLOW_ALPHA_ANIM_DOWN_DURATION = 1000;
+    protected static final int FLOW_ALPHA_ANIM_UP_DURATION = 700;
+
+    protected void setRoopFlowAlphaAnimation( final View view, final int iAnimType )
+    {
+        AlphaAnimation alpha;
+        if( iAnimType == ALPHA_DOWN_ANIM )
+        {
+            alpha = new AlphaAnimation( 1.0f, 0.0f );
+            alpha.setDuration( FLOW_ALPHA_ANIM_DOWN_DURATION );
+        }
+        else if( iAnimType == ALPHA_UP_ANIM )
+        {
+            alpha = new AlphaAnimation( 0.0f, 1.0f );
+            alpha.setDuration( FLOW_ALPHA_ANIM_UP_DURATION );
+        }
+        else
+        {
+            return;
+        }
+        alpha.setInterpolator( new LinearInterpolator() );
+        alpha.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                if( !mbStateArrawAnimation )
+                {
+                    return;
+                }
+
+
+                if( iAnimType == ALPHA_DOWN_ANIM )
+                {
+                    setRoopFlowAlphaAnimation( view, ALPHA_UP_ANIM );
+                }
+                else if( iAnimType == ALPHA_UP_ANIM )
+                {
+                    setRoopFlowAlphaAnimation( view, ALPHA_DOWN_ANIM );
+                }
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        view.setAnimation( alpha );
+    }
+
+    protected Boolean mbStateArrawAnimation = false;
 }

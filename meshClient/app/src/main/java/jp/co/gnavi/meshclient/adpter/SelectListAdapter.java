@@ -5,11 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import jp.co.gnavi.meshclient.R;
+import jp.co.gnavi.meshclient.common.Utility;
 import jp.co.gnavi.meshclient.data.SelectListData;
 
 /**
@@ -32,6 +34,36 @@ public class SelectListAdapter extends ArrayAdapter<SelectListData> {
         }
 
         SelectListData data = getItem(position);
+
+        View topLineView = (View)convertView.findViewById(R.id.list_top_line);
+        if( position == 0 )
+        {
+            topLineView.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            topLineView.setVisibility(View.GONE);
+        }
+
+
+        ImageView   iconImage = (ImageView)convertView.findViewById(R.id.target_icon);
+//        if( data.getIconImageUrl() == null )
+        if( data.getIconResourceId() == Utility.INVALID_ID )
+        {
+            iconImage.setImageResource(R.drawable.user_def);
+        }
+        else
+        {
+            // TODO:ロード？
+            iconImage.setImageResource(data.getIconResourceId());
+        }
+
+        TextView selectNoText = (TextView)convertView.findViewById(R.id.select_no);
+        selectNoText.setText(data.getListNo());
+
+        TextView teamName = (TextView)convertView.findViewById(R.id.team);
+        teamName.setText(data.getTeam());
+
         TextView text = (TextView)convertView.findViewById(R.id.target_name);
         text.setText( data.getTargetName() );
 

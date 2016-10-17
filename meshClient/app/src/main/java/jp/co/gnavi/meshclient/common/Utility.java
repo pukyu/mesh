@@ -6,6 +6,10 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
 
 import java.util.Set;
@@ -14,6 +18,9 @@ import java.util.Set;
  * Created by kaifuku on 2016/10/05.
  */
 public class Utility {
+
+    public static int INVALID_ID = -1;
+
     private static BluetoothAdapter mBluetoothAdapter;
     // todo:他の MESH 端末も同じ数値かチェック（数値の意味チェック）
     private final static String MESH_NAME = "MESH-100BU1001883";

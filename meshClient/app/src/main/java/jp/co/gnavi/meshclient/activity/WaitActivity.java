@@ -21,12 +21,22 @@ import android.widget.RelativeLayout;
 
 import jp.co.gnavi.lib.utility.GNUtility;
 import jp.co.gnavi.meshclient.R;
+import jp.co.gnavi.meshclient.common.Utility;
 
 /**
  * Created by kaifuku on 2016/10/12.
  */
 public class WaitActivity extends BaseActivity {
     private int miSoundId;
+
+    // 一番外側の円アニメーション時間（ミリ秒）
+    private static final int    CIRCLE4_ANIMATE_DURATION = 90000;
+    // 内側から 3 番目の円アニメーション時間（ミリ秒）
+    private static final int    CIRCLE3_ANIMATE_DURATION = 40000;
+    // 内側から 2 番目の円アニメーション時間（ミリ秒）
+    private static final int    CIRCLE2_ANIMATE_DURATION = 25000;
+    // 一番内側の円アニメーション時間（ミリ秒）
+    private static final int    CIRCLE1_ANIMATE_DURATION = 4000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,21 +82,11 @@ public class WaitActivity extends BaseActivity {
         super.onDestroy();
     }
 
-    // 一番外側の円アニメーション時間（ミリ秒）
-    private static final int    CIRCLE4_ANIMATE_DURATION = 90000;
-    // 内側から 3 番目の円アニメーション時間（ミリ秒）
-    private static final int    CIRCLE3_ANIMATE_DURATION = 40000;
-    // 内側から 2 番目の円アニメーション時間（ミリ秒）
-    private static final int    CIRCLE2_ANIMATE_DURATION = 25000;
-    // 一番内側の円アニメーション時間（ミリ秒）
-    private static final int    CIRCLE1_ANIMATE_DURATION = 4000;
-
-    private static Boolean      mbStateArrawAnimation = false;
-
     /**
      * 初期化
      */
     private void initialize() {
+
         final ImageView circle4 = (ImageView)findViewById(R.id.circle_4);
         ViewTreeObserver observer4 = circle4.getViewTreeObserver();
         observer4.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -138,52 +138,6 @@ public class WaitActivity extends BaseActivity {
         });
     }
 
-    private void startArrowAnimation()
-    {
-        ImageView leftArrow = (ImageView)findViewById(R.id.left_arrow_3);
-        setRoopFlowAlphaAnimation(leftArrow, ALPHA_DOWN_ANIM);
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                ImageView leftArrow = (ImageView)findViewById(R.id.left_arrow_2);
-                setRoopFlowAlphaAnimation(leftArrow, ALPHA_DOWN_ANIM);
-            }
-        }, ARROW_DELAY );
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                ImageView leftArrow = (ImageView)findViewById(R.id.left_arrow_1);
-                setRoopFlowAlphaAnimation(leftArrow, ALPHA_DOWN_ANIM);
-            }
-        }, ARROW_DELAY*2 );
-
-        ImageView rightArrow = (ImageView)findViewById(R.id.right_arrow_3);
-        setRoopFlowAlphaAnimation(rightArrow, ALPHA_DOWN_ANIM);
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                ImageView rightArrow = (ImageView)findViewById(R.id.right_arrow_2);
-                setRoopFlowAlphaAnimation(rightArrow, ALPHA_DOWN_ANIM);
-            }
-        }, ARROW_DELAY );
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                ImageView rightArrow = (ImageView)findViewById(R.id.right_arrow_1);
-                setRoopFlowAlphaAnimation(rightArrow, ALPHA_DOWN_ANIM);
-            }
-        }, ARROW_DELAY*2 );
-
-        View lineView = (View)findViewById(R.id.line_view);
-        setRoopLineAlphaAnimation(lineView, ALPHA_DOWN_ANIM);
-    }
-
-
-
     private void setRoopRotateAnimation(View view, int iStart, int iEnd, int iCenterX, int iCenterY, int iDuration )
     {
         RotateAnimation rotate = new RotateAnimation( iStart, iEnd, iCenterX, iCenterY );
@@ -210,109 +164,6 @@ public class WaitActivity extends BaseActivity {
         view.setAnimation( animSet );
     }
 
-    private static final int ALPHA_DOWN_ANIM = 0;
-    private static final int ALPHA_UP_ANIM = ALPHA_DOWN_ANIM + 1;
-
-    private static final int FLOW_ALPHA_ANIM_DOWN_DURATION = 1000;
-    private static final int FLOW_ALPHA_ANIM_UP_DURATION = 700;
-
-    private static final int ARROW_DELAY = 400;
-
-    private void setRoopFlowAlphaAnimation( final View view, final int iAnimType )
-    {
-        AlphaAnimation alpha;
-        if( iAnimType == ALPHA_DOWN_ANIM )
-        {
-            alpha = new AlphaAnimation( 1.0f, 0.0f );
-            alpha.setDuration( FLOW_ALPHA_ANIM_DOWN_DURATION );
-        }
-        else if( iAnimType == ALPHA_UP_ANIM )
-        {
-            alpha = new AlphaAnimation( 0.0f, 1.0f );
-            alpha.setDuration( FLOW_ALPHA_ANIM_UP_DURATION );
-        }
-        else
-        {
-            return;
-        }
-        alpha.setInterpolator( new LinearInterpolator() );
-        alpha.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                if( !mbStateArrawAnimation )
-                {
-                    return;
-                }
 
 
-                if( iAnimType == ALPHA_DOWN_ANIM )
-                {
-                    setRoopFlowAlphaAnimation( view, ALPHA_UP_ANIM );
-                }
-                else if( iAnimType == ALPHA_UP_ANIM )
-                {
-                    setRoopFlowAlphaAnimation( view, ALPHA_DOWN_ANIM );
-                }
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-
-        view.setAnimation( alpha );
-    }
-
-    private static final int LINE_ALPHA_ANIM_DURATION = 500;
-
-    private void setRoopLineAlphaAnimation( final View view, final int iAnimType )
-    {
-        AlphaAnimation alpha;
-        if( iAnimType == ALPHA_DOWN_ANIM )
-        {
-            alpha = new AlphaAnimation( 1.0f, 0.9f );
-            alpha.setDuration( LINE_ALPHA_ANIM_DURATION );
-        }
-        else if( iAnimType == ALPHA_UP_ANIM )
-        {
-            alpha = new AlphaAnimation( 0.9f, 1.0f );
-            alpha.setDuration( LINE_ALPHA_ANIM_DURATION );
-        }
-        else
-        {
-            return;
-        }
-        alpha.setInterpolator( new LinearInterpolator() );
-        alpha.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                if( iAnimType == ALPHA_DOWN_ANIM )
-                {
-                    setRoopFlowAlphaAnimation( view, ALPHA_UP_ANIM );
-                }
-                else if( iAnimType == ALPHA_UP_ANIM )
-                {
-                    setRoopFlowAlphaAnimation( view, ALPHA_DOWN_ANIM );
-                }
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-
-        view.setAnimation( alpha );
-    }
 }

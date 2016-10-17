@@ -1,16 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent" android:layout_height="match_parent"
+                android:background="@drawable/list_selector">
 
-    <TextView
-        android:text="？？？？？？？？"
+    <FrameLayout
+        android:layout_centerInParent="false"
+        android:background="@color/themeColor"
+        android:layout_height="1dp"
+        android:id="@+id/list_top_line"
+        android:layout_centerHorizontal="false"
+        android:layout_centerVertical="false"
         android:layout_width="match_parent"
-        android:id="@+id/target_name"
-        android:layout_height="50dp"
-        android:layout_margin="10dp"
-        android:lines="1"
-        android:textColor="@color/white"
-        android:textSize="20dp"
-        android:ellipsize="end"
-        android:textStyle="bold" />
+        android:visibility="gone">
+    </FrameLayout>
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/lock_on_1"
+        android:id="@+id/imageView2"
+        android:layout_alignTop="@+id/target_icon"
+        android:layout_alignBottom="@+id/target_icon"
+        android:layout_alignLeft="@+id/target_icon"
+        android:layout_alignRight="@+id/target_icon"/>
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/user_def"
+        android:id="@+id/target_icon"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="15dp"
+        android:layout_alignTop="@+id/text_layout"
+        android:layout_alignBottom="@+id/text_layout"
+        android:layout_centerVertical="true"
+        android:padding="1dp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/target_icon"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        android:id="@+id/text_layout">
+
+        <TextView
+            android:text="SELECT:01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/select_no"
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/themeColor"
+            android:textSize="15dp"/>
+
+        <TextView
+            android:text="Team"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/team"
+            android:layout_below="@+id/select_no"
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:ellipsize="end"
+            android:lines="1"
+            android:textSize="18dp"/>
+
+        <TextView
+            android:text="？？？？？？？？"
+            android:layout_width="match_parent"
+            android:id="@+id/target_name"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:textColor="@color/white"
+            android:ellipsize="end"
+            android:textStyle="bold"
+            android:layout_below="@+id/team"
+            android:textSize="28dp"/>
+    </RelativeLayout>
+
 </RelativeLayout>
