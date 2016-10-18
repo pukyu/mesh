@@ -4,14 +4,14 @@
                 android:layout_height="match_parent">
 
     <RelativeLayout
-        android:id="@+id/ready_overlay"
+        android:id="@+id/overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/ready_filter"
+            android:id="@+id/filter"
             android:background="@color/alphaYellow">
 
         </FrameLayout>
@@ -20,27 +20,29 @@
             android:layout_width="match_parent"
             android:layout_centerInParent="true"
             android:background="@color/lightYellow"
-            android:layout_height="250dp">
+            android:layout_height="250dp"
+            android:id="@+id/overlay_infor"
+            android:layout_centerHorizontal="false">
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="41dp"
+                android:layout_height="41dp"
                 android:src="@drawable/frame_2_r"
                 android:id="@+id/imageView6"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"/>
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="41dp"
+                android:layout_height="41dp"
                 android:src="@drawable/frame_2_l"
                 android:id="@+id/imageView5"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"/>
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="41dp"
+                android:layout_height="41dp"
                 android:src="@drawable/frame_1_r"
                 android:id="@+id/imageView4"
                 android:layout_alignParentRight="true"
@@ -51,8 +53,8 @@
                 android:src="@drawable/frame_1_l"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:layout_width="40dp"
-                android:layout_height="40dp"/>
+                android:layout_width="41dp"
+                android:layout_height="41dp"/>
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -62,16 +64,16 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/countdown"
+                    android:id="@+id/overlay_main_pic"
                     android:layout_centerHorizontal="true"
                     android:src="@drawable/count_10"
-                    android:layout_below="@+id/countdown_title"/>
+                    android:layout_below="@+id/overlay_main_text"/>
 
                 <TextView
                     android:text="上司争奪戦開始迄"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/countdown_title"
+                    android:id="@+id/overlay_main_text"
                     android:layout_centerHorizontal="true"
                     android:textColor="@color/black"
                     android:textSize="30dp"

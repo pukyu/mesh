@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/back_color"
+        android:background="@color/winColor">
+    </FrameLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/gu_bg" />
+
+    <include
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        layout="@layout/header_layout"
+        android:id="@+id/status_layout"/>
+
+    <TextView
+        android:text="争奪戦結果"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sub_title"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/status_layout"
+        android:textColor="@color/gray"
+        android:textSize="18dp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/result_infor"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <ImageView
+            android:layout_height="40dp"
+            android:id="@+id/reselect"
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@+id/result_list_text"
+            android:src="@drawable/btn_select"
+            android:layout_width="40dp"/>
+
+        <TextView
+            android:text="@string/information_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/result_infor_title"
+            android:textColor="@color/winYellow"
+            android:layout_centerHorizontal="true"
+            android:textSize="15dp"
+            />
+
+        <TextView
+            android:text="３名中１番目にボタンを押しました"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/reuslt_description"
+            android:textColor="@color/white"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/result_infor_title"
+            android:layout_marginTop="5dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/result_list_text"
+            android:textColor="@color/white"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/reuslt_description"
+            android:layout_marginTop="10dp"
+            android:text="@string/result_dummy"/>
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="300dp"
+        android:id="@+id/main_image"
+        android:src="@drawable/win"
+        android:layout_below="@+id/sub_title"
+        android:layout_above="@+id/result_infor"
+        android:layout_centerInParent="true"
+        android:layout_height="wrap_content"/>
+
+</RelativeLayout>

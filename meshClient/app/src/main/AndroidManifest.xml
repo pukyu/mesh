@@ -51,6 +51,12 @@
             android:screenOrientation="portrait" >
         </activity>
 
+        <activity
+            android:name="jp.co.gnavi.meshclient.activity.ResultActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" >
+        </activity>
+
         <receiver
             android:name="jp.co.gnavi.meshclient.gcm.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >

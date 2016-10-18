@@ -3,4 +3,8 @@
     <string name="cannot_bluetooth_error">この端末で本アプリは使用できません</string>
     <string name="bluetooth_off">BluetoothをONにしてください</string>
     <string name="mesh_unknown">MacAddressの取得に失敗しました</string>
+    <string name="information_title">INFORMATION</string>
+    <string name="result_dummy">１　　　山田　太郎　\n
+２　　　ぐる　なび子\n
+３　　　山田　花子　</string>
 </resources>

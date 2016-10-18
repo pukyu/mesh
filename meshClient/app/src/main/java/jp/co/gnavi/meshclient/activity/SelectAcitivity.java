@@ -6,6 +6,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -110,5 +111,9 @@ public class SelectAcitivity extends BaseActivity
                 overridePendingTransition(0, 0);
             }
         });
+
+        TextView title = (TextView)findViewById(R.id.state_title);
+        title.setText("SELECT");
+
     }
 }

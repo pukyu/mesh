@@ -14,4 +14,6 @@
     <color name="alphaPink">#33FF00FF</color>
     <color name="lightPink">#ccFF00FF</color>
     <color name="pink">#FF00FF</color>
+    <color name="winColor">#eb0000</color>
+    <color name="winYellow">#ffff9d</color>
 </resources>
