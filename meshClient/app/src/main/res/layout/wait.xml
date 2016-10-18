@@ -135,9 +135,10 @@
             android:maxLines="1"
             android:singleLine="true"
             android:layout_width="120dp"
-            android:textSize="35dp"
             android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"/>
+            android:layout_centerHorizontal="true"
+            android:textSize="25dp"
+            android:textStyle="normal|bold"/>
 
     </RelativeLayout>
 
@@ -204,6 +205,24 @@
         android:layout_below="@+id/status_layout"
         android:layout_height="70dp">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/ready_wait_layout"
+            android:layout_below="@+id/sub_titile"
+            android:visibility="invisible">
+
+            <TextView
+                android:text="各自争奪戦準備後待機推奨"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/yellow"
+                android:textSize="26dp"
+                android:layout_alignParentBottom="true"/>
+        </RelativeLayout>
+
         <TextView
             android:text="上司着席待"
             android:layout_width="wrap_content"
@@ -214,66 +233,73 @@
             android:layout_centerHorizontal="true"
             />
 
-        <TextView
-            android:text="WAIT TIME"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView4"
-            android:textColor="@color/themeColor"
-            android:textSize="15dp"
-            android:layout_above="@+id/about_text"
-            android:layout_alignRight="@+id/about_text"/>
+        <RelativeLayout
+            android:id="@+id/wait_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <TextView
-            android:text="MINUTES"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView2"
-            android:textColor="@color/themeColor"
-            android:textSize="15dp"
-            android:layout_above="@+id/minute_text"
-            android:layout_alignLeft="@+id/minute_text"/>
+            <TextView
+                android:text="WAIT TIME"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView4"
+                android:textColor="@color/themeColor"
+                android:textSize="15dp"
+                android:layout_above="@+id/about_text"
+                android:layout_alignRight="@+id/about_text"/>
 
-        <TextView
-            android:text="分待"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/minute_text"
-            android:layout_toRightOf="@+id/wait_time"
-            android:textSize="18dp"
-            android:textColor="@color/white"
-            android:layout_centerVertical="false"
-            android:layout_alignParentBottom="true" />
+            <TextView
+                android:text="MINUTES"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView2"
+                android:textColor="@color/themeColor"
+                android:textSize="15dp"
+                android:layout_above="@+id/minute_text"
+                android:layout_alignLeft="@+id/minute_text"/>
 
-        <TextView
-            android:text="？？？"
-            android:layout_height="wrap_content"
-            android:id="@+id/wait_time"
-            android:layout_centerVertical="false"
-            android:layout_centerHorizontal="true"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:textAlignment="center"
-            android:layout_width="120dp"
-            android:textSize="35dp"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/text_frame"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"/>
+            <TextView
+                android:text="分待"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/minute_text"
+                android:layout_toRightOf="@+id/wait_time"
+                android:textSize="18dp"
+                android:textColor="@color/white"
+                android:layout_centerVertical="false"
+                android:layout_alignParentBottom="true" />
 
-        <TextView
-            android:text="大体"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/about_text"
-            android:textColor="@color/white"
-            android:textSize="18dp"
-            android:layout_toLeftOf="@+id/wait_time"
-            android:layout_centerInParent="false"
-            android:textAllCaps="false"
-            android:layout_centerVertical="false"
-            android:layout_centerHorizontal="false"
-            android:layout_alignParentBottom="true" />
+            <TextView
+                android:text="？？？"
+                android:layout_height="wrap_content"
+                android:id="@+id/wait_time"
+                android:layout_centerVertical="false"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                android:layout_width="120dp"
+                android:textSize="35dp"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/text_frame"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"/>
+
+            <TextView
+                android:text="大体"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/about_text"
+                android:textColor="@color/white"
+                android:textSize="18dp"
+                android:layout_toLeftOf="@+id/wait_time"
+                android:layout_centerInParent="false"
+                android:textAllCaps="false"
+                android:layout_centerVertical="false"
+                android:layout_centerHorizontal="false"
+                android:layout_alignParentBottom="true" />
+        </RelativeLayout>
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -361,5 +387,11 @@
         </RelativeLayout>
 
     </RelativeLayout>
+
+    <include
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        layout="@layout/color_overlay"/>
+
 
 </RelativeLayout>

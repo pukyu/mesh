@@ -1,6 +1,7 @@
 package jp.co.gnavi.meshclient.activity;
 
 import android.animation.AnimatorSet;
+import android.graphics.PorterDuff;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.Image;
@@ -18,6 +19,7 @@ import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import jp.co.gnavi.lib.utility.GNUtility;
 import jp.co.gnavi.meshclient.R;
@@ -87,6 +89,9 @@ public class WaitActivity extends BaseActivity {
      */
     private void initialize() {
 
+        // TODO:仮
+        changeStateWait();
+
         final ImageView circle4 = (ImageView)findViewById(R.id.circle_4);
         ViewTreeObserver observer4 = circle4.getViewTreeObserver();
         observer4.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -134,6 +139,7 @@ public class WaitActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 playSound( miSoundId );
+                changeStateReady();
             }
         });
     }
@@ -162,6 +168,91 @@ public class WaitActivity extends BaseActivity {
         animSet.setInterpolator( new LinearInterpolator() );
 
         view.setAnimation( animSet );
+    }
+
+    private void changeStateWait()
+    {
+        setDisplayColorFilter(getResources().getColor(R.color.themeColor));
+
+        TextView stateText = (TextView)findViewById(R.id.state_title);
+        stateText.setText("WAIT");
+
+        TextView subTitle = (TextView)findViewById(R.id.sub_title);
+        subTitle.setText("上司着席待");
+
+        RelativeLayout readyLayout = (RelativeLayout)findViewById(R.id.ready_overlay);
+        readyLayout.setVisibility(View.INVISIBLE);
+
+        RelativeLayout subTitleWaitLayout = (RelativeLayout)findViewById(R.id.wait_layout);
+        subTitleWaitLayout.setVisibility(View.VISIBLE);
+    }
+
+    private void changeStateReady()
+    {
+        setDisplayColorFilter(getResources().getColor(R.color.yellow));
+
+        TextView stateText = (TextView)findViewById(R.id.state_title);
+        stateText.setText("STANDBY");
+
+        TextView subTitle = (TextView)findViewById(R.id.sub_title);
+        subTitle.setText("準備中");
+
+        RelativeLayout readyLayout = (RelativeLayout)findViewById(R.id.ready_overlay);
+        readyLayout.setVisibility(View.VISIBLE);
+
+        RelativeLayout subTitleWaitLayout = (RelativeLayout)findViewById(R.id.wait_layout);
+        subTitleWaitLayout.setVisibility(View.INVISIBLE);
+
+
+    }
+
+
+    private void setDisplayColorFilter( int iColor )
+    {
+        ImageView rightArrow1 = (ImageView)findViewById(R.id.right_arrow_1);
+        rightArrow1.setColorFilter(iColor, PorterDuff.Mode.SRC_IN);
+
+        ImageView rightArrow2 = (ImageView)findViewById(R.id.right_arrow_2);
+        rightArrow2.setColorFilter(iColor, PorterDuff.Mode.SRC_IN);
+
+        ImageView rightArrow3 = (ImageView)findViewById(R.id.right_arrow_3);
+        rightArrow3.setColorFilter(iColor, PorterDuff.Mode.SRC_IN);
+
+        ImageView leftArrow1 = (ImageView)findViewById(R.id.left_arrow_1);
+        leftArrow1.setColorFilter(iColor, PorterDuff.Mode.SRC_IN);
+
+        ImageView leftArrow2 = (ImageView)findViewById(R.id.left_arrow_2);
+        leftArrow2.setColorFilter(iColor, PorterDuff.Mode.SRC_IN);
+
+        ImageView leftArrow3 = (ImageView)findViewById(R.id.left_arrow_3);
+        leftArrow3.setColorFilter(iColor, PorterDuff.Mode.SRC_IN);
+
+        View leftLine = (View)findViewById(R.id.line_view_left);
+        leftLine.setBackgroundColor(iColor);
+
+        View rightLine = (View)findViewById(R.id.line_view_right);
+        rightLine.setBackgroundColor(iColor);
+
+        TextView stateText = (TextView)findViewById(R.id.state_title);
+        stateText.setTextColor(iColor);
+
+        TextView targetTitle = (TextView)findViewById(R.id.target_title);
+        targetTitle.setTextColor(iColor);
+
+        TextView inforTitle = (TextView)findViewById(R.id.infor_title);
+        inforTitle.setTextColor(iColor);
+
+        ImageView circle1 = (ImageView)findViewById(R.id.circle_1);
+        circle1.setColorFilter(iColor, PorterDuff.Mode.SRC_IN);
+
+        ImageView circle2 = (ImageView)findViewById(R.id.circle_2);
+        circle2.setColorFilter(iColor, PorterDuff.Mode.SRC_IN);
+
+        ImageView circle3 = (ImageView)findViewById(R.id.circle_3);
+        circle3.setColorFilter(iColor, PorterDuff.Mode.SRC_IN);
+
+        ImageView circle4 = (ImageView)findViewById(R.id.circle_4);
+        circle4.setColorFilter(iColor, PorterDuff.Mode.SRC_IN);
     }
 
 

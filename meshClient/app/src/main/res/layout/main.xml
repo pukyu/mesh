@@ -11,5 +11,5 @@
         android:text="None"
         android:id="@+id/mesh_data"
         android:textColor="@color/black"
-        android:layout_margin="10dp"/>
+        />
 </RelativeLayout>

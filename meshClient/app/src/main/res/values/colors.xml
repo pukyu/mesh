@@ -8,4 +8,10 @@
     <color name="themeColor">#cc00ffff</color>
     <color name="gray">#898989</color>
     <color name="clear">#00000000</color>
+    <color name="yellow">#FFFF00</color>
+    <color name="alphaYellow">#33FFFF00</color>
+    <color name="lightYellow">#ccFFFF00</color>
+    <color name="alphaPink">#33FF00FF</color>
+    <color name="lightPink">#ccFF00FF</color>
+    <color name="pink">#FF00FF</color>
 </resources>
