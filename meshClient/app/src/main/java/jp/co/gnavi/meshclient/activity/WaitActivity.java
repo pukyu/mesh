@@ -8,6 +8,8 @@ import android.media.Image;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
@@ -20,6 +22,13 @@ import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.mlkcca.client.DataElement;
+import com.mlkcca.client.DataStore;
+import com.mlkcca.client.DataStoreEventListener;
+import com.mlkcca.client.MilkCocoa;
+import com.mlkcca.client.Streaming;
 
 import jp.co.gnavi.lib.utility.GNUtility;
 import jp.co.gnavi.meshclient.R;
@@ -39,6 +48,13 @@ public class WaitActivity extends BaseActivity {
     private static final int    CIRCLE2_ANIMATE_DURATION = 25000;
     // 一番内側の円アニメーション時間（ミリ秒）
     private static final int    CIRCLE1_ANIMATE_DURATION = 4000;
+
+    private int mBossId = 0;
+    // PUSHプラットフォーム
+    private MilkCocoa milkCocoa;
+    private DataStore dataStore;
+
+    private Handler mHandler = new Handler(Looper.getMainLooper());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +107,86 @@ public class WaitActivity extends BaseActivity {
 
         // TODO:仮
         changeStateWait();
+
+        mBossId = getIntent().getIntExtra("id", 0);
+
+        milkCocoa = new MilkCocoa("guitariu6e7lgx.mlkcca.com");
+        dataStore = milkCocoa.dataStore("messages");
+        dataStore.addDataStoreEventListener(new DataStoreEventListener() {
+            @Override
+            public void onPushed(DataElement dataElement) {
+                Log.d("Milkcocoa", "onPushed");
+                if (dataElement == null) {
+                    Log.e("Milkcocoa", "data is null");
+                    return;
+                }
+
+                final DataElement data = dataElement;
+                final String type = data.getValue("type");
+                final String id = data.getValue("id");
+
+                if ("notice".equals(type)) {
+                    // 上司が開始ボタンを押した
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.d("push", "notice " + id);
+                        }
+                    });
+                }
+                else if ("start".equals(type)) {
+                    // サーバ側で受付が開始された
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.d("push", "start " + id);
+                        }
+                    });
+                }
+                else if ("finish".equals(type)) {
+                    // カウントダウンが終了した
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.d("push", "finish " + id);
+                        }
+                    });
+                }
+                else if ("result".equals(type)) {
+                    // カウントダウンが終了した
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            String result = data.getValue("result");
+                            Log.d("push", "result " + id + ":" + result);
+                        }
+                    });
+                }
+
+            }
+
+            @Override
+            public void onSetted(DataElement dataElement) {
+                Log.d("Milkcocoa", "onSetted");
+            }
+
+            @Override
+            public void onSended(DataElement dataElement) {
+                Log.d("Milkcocoa", "onSended");
+                if (dataElement == null) {
+                    Log.e("Milkcocoa", "data is null");
+                    return;
+                }
+            }
+
+            @Override
+            public void onRemoved(DataElement dataElement) {
+                Log.d("Milkcocoa", "onremoved");
+            }
+        });
+        dataStore.on("push");
+        dataStore.on("send");
+        Log.d("Milkcocoa", "setuped");
 
         final ImageView circle4 = (ImageView)findViewById(R.id.circle_4);
         ViewTreeObserver observer4 = circle4.getViewTreeObserver();
