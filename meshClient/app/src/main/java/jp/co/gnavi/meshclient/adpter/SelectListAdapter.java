@@ -20,7 +20,6 @@ import jp.co.gnavi.meshclient.data.SelectListData;
 
 public class SelectListAdapter extends ArrayAdapter<SelectListData> {
     LayoutInflater mLayoutInflater = null;
-    ArrayList<SelectListData> mDataList;
 
     public SelectListAdapter(Context context) {
         super(context, 0);
@@ -35,6 +34,7 @@ public class SelectListAdapter extends ArrayAdapter<SelectListData> {
 
         SelectListData data = getItem(position);
 
+        int iMax = getCount() - 1;
         View topLineView = (View)convertView.findViewById(R.id.list_top_line);
         if( position == 0 )
         {

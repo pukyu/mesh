@@ -15,7 +15,6 @@
         android:visibility="gone">
     </FrameLayout>
 
-
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -66,10 +65,9 @@
             android:layout_below="@+id/select_no"
             android:layout_marginBottom="5dp"
             android:textColor="@color/white"
-            android:textStyle="bold"
             android:ellipsize="end"
             android:lines="1"
-            android:textSize="18dp"/>
+            android:textSize="16dp"/>
 
         <TextView
             android:text="？？？？？？？？"
@@ -79,9 +77,8 @@
             android:lines="1"
             android:textColor="@color/white"
             android:ellipsize="end"
-            android:textStyle="bold"
             android:layout_below="@+id/team"
-            android:textSize="28dp"/>
+            android:textSize="26dp"/>
     </RelativeLayout>
 
 </RelativeLayout>

@@ -23,7 +23,7 @@ public class BaseActivity extends Activity {
     private SoundPool mSoundPool = null;
 
     // 上部矢印アニメーションのそれぞれの開始間隔
-    private static final int ARROW_DELAY = 400;
+    protected static final int ARROW_DELAY = 400;
 
 
     @Override
@@ -92,9 +92,10 @@ public class BaseActivity extends Activity {
      */
     protected void startArrowAnimation()
     {
+/*
         ImageView leftArrow = (ImageView)findViewById(R.id.left_arrow_3);
         setRoopFlowAlphaAnimation(leftArrow, ALPHA_DOWN_ANIM);
-
+*/
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -111,9 +112,10 @@ public class BaseActivity extends Activity {
             }
         }, ARROW_DELAY*2 );
 
+/*
         ImageView rightArrow = (ImageView)findViewById(R.id.right_arrow_3);
         setRoopFlowAlphaAnimation(rightArrow, ALPHA_DOWN_ANIM);
-
+*/
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -184,6 +186,7 @@ public class BaseActivity extends Activity {
             }
         });
 
+        view.clearAnimation();
         view.setAnimation( alpha );
     }
 
@@ -238,8 +241,31 @@ public class BaseActivity extends Activity {
             }
         });
 
+        view.clearAnimation();
         view.setAnimation( alpha );
     }
+
+    protected void clearArrawAnimation()
+    {
+        ImageView leftArraw3 = (ImageView)findViewById(R.id.left_arrow_3);
+        leftArraw3.clearAnimation();
+
+        ImageView leftArraw2 = (ImageView)findViewById(R.id.left_arrow_2);
+        leftArraw2.clearAnimation();
+
+        ImageView leftArraw1 = (ImageView)findViewById(R.id.left_arrow_1);
+        leftArraw1.clearAnimation();
+
+        ImageView rightArraw3 = (ImageView)findViewById(R.id.right_arrow_3);
+        rightArraw3.clearAnimation();
+
+        ImageView rightArraw2 = (ImageView)findViewById(R.id.right_arrow_2);
+        rightArraw2.clearAnimation();
+
+        ImageView rightArraw1 = (ImageView)findViewById(R.id.right_arrow_1);
+        rightArraw1.clearAnimation();
+    }
+
 
     protected Boolean mbStateArrawAnimation = false;
 }

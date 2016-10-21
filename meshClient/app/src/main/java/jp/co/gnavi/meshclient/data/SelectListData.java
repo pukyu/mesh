@@ -1,12 +1,14 @@
 package jp.co.gnavi.meshclient.data;
 
+import java.io.Serializable;
+
 import jp.co.gnavi.meshclient.common.Utility;
 
 /**
  * Created by cheshirecat on 2016/10/16.
  */
 
-public class SelectListData
+public class SelectListData implements Serializable
 {
     String mstrListNo = "";
     String mstrTeam = "";

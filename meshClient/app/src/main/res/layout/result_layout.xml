@@ -46,14 +46,6 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp">
 
-        <ImageView
-            android:layout_height="40dp"
-            android:id="@+id/reselect"
-            android:layout_alignParentRight="true"
-            android:layout_alignBottom="@+id/result_list_text"
-            android:src="@drawable/btn_select"
-            android:layout_width="40dp"/>
-
         <TextView
             android:text="@string/information_title"
             android:layout_width="wrap_content"
@@ -74,16 +66,96 @@
             android:layout_below="@+id/result_infor_title"
             android:layout_marginTop="5dp"/>
 
-        <TextView
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/result_list_text"
-            android:textColor="@color/white"
+            android:id="@+id/result_data"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/reuslt_description"
-            android:layout_marginTop="10dp"
-            android:text="@string/result_dummy"/>
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="10dp">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/layout_1st">
+
+                <TextView
+                    android:text="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/text_1st"
+                    android:textColor="@color/winYellow"/>
+
+                <TextView
+                    android:text="山田 太郎"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/name_1st"
+                    android:textColor="@color/white"
+                    android:layout_toRightOf="@+id/text_1st"
+                    android:layout_marginLeft="20dp"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/layout_2nd"
+                android:layout_below="@+id/layout_1st">
+
+                <TextView
+                    android:text="2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/text_2nd"
+                    android:textColor="@color/winYellow"/>
+
+                <TextView
+                    android:text="ぐる ナビ子"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/name_2nd"
+                    android:layout_toRightOf="@+id/text_2nd"
+                    android:textColor="@color/white"
+                    android:layout_marginLeft="20dp"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/layout_3rd"
+                android:layout_below="@+id/layout_2nd">
+
+                <TextView
+                    android:text="3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/text_3rd"
+                    android:textColor="@color/winYellow"/>
+
+                <TextView
+                    android:text="山田 花子"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/name_3rd"
+                    android:layout_marginLeft="20dp"
+                    android:layout_toRightOf="@+id/text_3rd"
+                    android:textColor="@color/white"/>
+            </RelativeLayout>
+
+        </RelativeLayout>
+
     </RelativeLayout>
+
+    <ImageView
+        android:layout_height="40dp"
+        android:id="@+id/reselect"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/btn_select"
+        android:layout_width="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="20dp"/>
 
     <ImageView
         android:layout_width="300dp"

@@ -12,6 +12,7 @@
 -->
     <application
         android:allowBackup="true"
+        android:name="jp.co.gnavi.meshclient.Application.CustomApplication"
         android:icon="@drawable/icon"
         android:label="${appName}"
         android:supportsRtl="true"

@@ -5,6 +5,8 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.KeyEvent;
+import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.AlphaAnimation;
@@ -15,8 +17,16 @@ import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.mlkcca.client.DataElement;
+import com.mlkcca.client.DataStore;
+import com.mlkcca.client.DataStoreEventListener;
+import com.mlkcca.client.MilkCocoa;
 
 import jp.co.gnavi.meshclient.R;
+import jp.co.gnavi.meshclient.common.Utility;
+import jp.co.gnavi.meshclient.data.SelectListData;
 
 /**
  * Created by kaifuku on 2016/10/12.
@@ -44,6 +54,15 @@ public class WaitActivity extends BaseActivity {
     private static final int STATE_LOSE = STATE_WIN + 1;
     private int miState = STATE_WAIT;
 
+    private int mBossId = 0;
+    // PUSHプラットフォーム
+
+    private MilkCocoa milkCocoa;
+    private DataStore dataStore;
+
+    private Handler mHandler = new Handler(Looper.getMainLooper());
+
+    private SelectListData mTargetData;
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent e) {
@@ -60,12 +79,20 @@ public class WaitActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView( R.layout.wait );
 
+        Intent intent = getIntent();
+        mTargetData = (SelectListData) intent.getSerializableExtra("target");
+
         initialize();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         if( !mbStateArrawAnimation )
         {
@@ -77,21 +104,17 @@ public class WaitActivity extends BaseActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
+
+        clearArrawAnimation();
+        releaseSound();
+        mbStateArrawAnimation = false;
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-
-        mbStateArrawAnimation = false;
-        releaseSound();
     }
 
     @Override
@@ -106,6 +129,8 @@ public class WaitActivity extends BaseActivity {
 
         // TODO:仮
         changeStateWait();
+
+        makeConnection();
 
         final ImageView circle4 = (ImageView)findViewById(R.id.circle_4);
         ViewTreeObserver observer4 = circle4.getViewTreeObserver();
@@ -162,9 +187,31 @@ public class WaitActivity extends BaseActivity {
         backSelectImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                Intent intent = new Intent( WaitActivity.this, SelectAcitivity.class );
+                intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP );
+                startActivity( intent );
+                overridePendingTransition(0, 0);
             }
         });
+
+
+        ImageView targetIcon = (ImageView)findViewById(R.id.user_icon);
+        if( mTargetData.getIconResourceId() != Utility.INVALID_ID )
+        {
+            targetIcon.setImageResource(mTargetData.getIconResourceId());
+        }
+        else
+        {
+            targetIcon.setImageResource(R.drawable.user_def);
+        }
+        TextView group = (TextView)findViewById(R.id.group_name);
+        group.setText(mTargetData.getTeam());
+
+        TextView targetName = (TextView)findViewById(R.id.user_name);
+        targetName.setText(mTargetData.getTargetName());
+
+        TextView waitTime = (TextView)findViewById(R.id.wait_time);
+        waitTime.setText("15");
     }
 
     private void setRoopRotateAnimation(View view, int iStart, int iEnd, int iCenterX, int iCenterY, int iDuration )
@@ -211,6 +258,9 @@ public class WaitActivity extends BaseActivity {
 
         RelativeLayout stateSubTitleLayout = (RelativeLayout)findViewById(R.id.state_sub_title);
         stateSubTitleLayout.setVisibility(View.INVISIBLE);
+
+        ImageView backSelectImage = (ImageView)findViewById(R.id.reselect);
+        backSelectImage.setEnabled(true);
     }
 
     private void changeStateReady()
@@ -243,6 +293,10 @@ public class WaitActivity extends BaseActivity {
 
         RelativeLayout stateSubTitleLayout = (RelativeLayout)findViewById(R.id.state_sub_title);
         stateSubTitleLayout.setVisibility(View.VISIBLE);
+
+        ImageView backSelectImage = (ImageView)findViewById(R.id.reselect);
+        backSelectImage.setEnabled(false);
+
 
         new Handler().post(new Runnable() {
             @Override
@@ -438,6 +492,86 @@ public class WaitActivity extends BaseActivity {
         subTitleText.setTextColor(iSubTitleColor);
     }
 
+    private void makeConnection()
+    {
+        mBossId = getIntent().getIntExtra("id", 0);
 
+        milkCocoa = new MilkCocoa("guitariu6e7lgx.mlkcca.com");
+        dataStore = milkCocoa.dataStore("messages");
+        dataStore.addDataStoreEventListener(new DataStoreEventListener() {
+            @Override
+            public void onPushed(DataElement dataElement) {
+                Log.d("Milkcocoa", "onPushed");
+                if (dataElement == null) {
+                    Log.e("Milkcocoa", "data is null");
+                    return;
+                }
 
+                final DataElement data = dataElement;
+                final String type = data.getValue("type");
+                final String id = data.getValue("id");
+
+                if ("notice".equals(type)) {
+                    // 上司が開始ボタンを押した
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.d("push", "notice " + id);
+                        }
+                    });
+                }
+                else if ("start".equals(type)) {
+                    // サーバ側で受付が開始された
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.d("push", "start " + id);
+                        }
+                    });
+                }
+                else if ("finish".equals(type)) {
+                    // カウントダウンが終了した
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.d("push", "finish " + id);
+                        }
+                    });
+                }
+                else if ("result".equals(type)) {
+                    // カウントダウンが終了した
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            String result = data.getValue("result");
+                            Log.d("push", "result " + id + ":" + result);
+                        }
+                    });
+                }
+
+            }
+
+            @Override
+            public void onSetted(DataElement dataElement) {
+                Log.d("Milkcocoa", "onSetted");
+            }
+
+            @Override
+            public void onSended(DataElement dataElement) {
+                Log.d("Milkcocoa", "onSended");
+                if (dataElement == null) {
+                    Log.e("Milkcocoa", "data is null");
+                    return;
+                }
+            }
+
+            @Override
+            public void onRemoved(DataElement dataElement) {
+                Log.d("Milkcocoa", "onremoved");
+            }
+        });
+        dataStore.on("push");
+        dataStore.on("send");
+        Log.d("Milkcocoa", "setuped");
+    }
 }

@@ -2,12 +2,14 @@ package jp.co.gnavi.meshclient.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import jp.co.gnavi.meshclient.R;
@@ -22,6 +24,7 @@ import jp.co.gnavi.meshclient.data.SelectListData;
 public class SelectAcitivity extends BaseActivity
 {
     private int miSoundId;
+    private ArrayList<SelectListData>   mTargetData = new ArrayList<>();
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent e) {
@@ -45,31 +48,43 @@ public class SelectAcitivity extends BaseActivity
     @Override
     protected void onStart() {
         super.onStart();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent)
+    {
+        super.onNewIntent(intent);
+
+        // Pause で落ちてると思うけど念のため。
+        mbStateArrawAnimation = false;
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         if( !mbStateArrawAnimation )
         {
             mbStateArrawAnimation = true;
             startArrowAnimation();
         }
-        miSoundId = initializeSound();
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+        miSoundId = initializeSound();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+
+        clearArrawAnimation();
+        releaseSound();
+        mbStateArrawAnimation = false;
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-
-        mbStateArrawAnimation = false;
-        releaseSound();
     }
 
     @Override
@@ -80,7 +95,7 @@ public class SelectAcitivity extends BaseActivity
     private void initalize()
     {
         SelectListAdapter adapter = new SelectListAdapter(getApplicationContext());
-
+/*
         for( int i = 0 ; i < 5 ; i++ )
         {
             SelectListData data = new SelectListData();
@@ -97,6 +112,39 @@ public class SelectAcitivity extends BaseActivity
 
             adapter.add(data);
         }
+*/
+        SelectListData dataTaki = new SelectListData();
+        dataTaki.setListNo("SELECT:01");
+        dataTaki.setTeam("Z14 推進期間");
+        dataTaki.setTargetName("滝 久雄");
+
+        SelectListData dataKubo = new SelectListData();
+        dataKubo.setListNo("SELECT:02");
+        dataKubo.setTeam("Z14 推進期間");
+        dataKubo.setTargetName("久保 征一郎");
+
+        SelectListData dataMatsu = new SelectListData();
+        dataMatsu.setListNo("SELECT:03");
+        dataMatsu.setTeam("Z14 推進期間 第一開発部 主任");
+        dataMatsu.setTargetName("松村 翔子");
+        dataMatsu.setIconResourceId(R.drawable.matsumura);
+
+        SelectListData dataYama = new SelectListData();
+        dataYama.setListNo("SELECT:04");
+        dataYama.setTeam("Z14 推進期間 第一開発部 主任");
+        dataYama.setTargetName("山田 太郎");
+
+        mTargetData.add(dataTaki);
+        mTargetData.add(dataKubo);
+        mTargetData.add(dataMatsu);
+        mTargetData.add(dataYama);
+
+        for( int i = 0 ; i < mTargetData.size() ; i++ )
+        {
+            adapter.add(mTargetData.get(i));
+        }
+
+
 
         ListView list = (ListView)findViewById(R.id.select_list);
         list.setAdapter(adapter);
@@ -107,6 +155,8 @@ public class SelectAcitivity extends BaseActivity
 
                 Intent intent = new Intent( getApplicationContext(), WaitActivity.class );
                 intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP );
+                intent.putExtra("id", position);
+                intent.putExtra("target", (Serializable) mTargetData.get(position));
                 startActivity( intent );
                 overridePendingTransition(0, 0);
             }
