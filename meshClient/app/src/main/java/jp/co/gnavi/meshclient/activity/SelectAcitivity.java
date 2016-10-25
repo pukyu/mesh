@@ -3,17 +3,29 @@ package jp.co.gnavi.meshclient.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 
+import jp.co.gnavi.lib.common.GNDefine;
+import jp.co.gnavi.lib.connection.GNCustomUrlConnection;
+import jp.co.gnavi.lib.connection.GNCustomUrlReturnObject;
 import jp.co.gnavi.meshclient.R;
 import jp.co.gnavi.meshclient.adpter.SelectListAdapter;
+import jp.co.gnavi.meshclient.common.Define;
 import jp.co.gnavi.meshclient.common.Utility;
 import jp.co.gnavi.meshclient.data.SelectListData;
 
@@ -48,6 +60,8 @@ public class SelectAcitivity extends BaseActivity
     @Override
     protected void onStart() {
         super.onStart();
+
+        load();
     }
 
     @Override
@@ -94,7 +108,91 @@ public class SelectAcitivity extends BaseActivity
 
     private void initalize()
     {
+        ListView list = (ListView)findViewById(R.id.select_list);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                playSound( miSoundId );
+
+                Intent intent = new Intent( getApplicationContext(), WaitActivity.class );
+                intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP );
+                intent.putExtra("id", position);
+                intent.putExtra("target", (Serializable) mTargetData.get(position));
+                startActivity( intent );
+                overridePendingTransition(0, 0);
+            }
+        });
+
+        TextView title = (TextView)findViewById(R.id.state_title);
+        title.setText("SELECT");
+    }
+
+    private void load()
+    {
+        Handler handler = new Handler() {
+            public void handleMessage(Message msg) {
+                if (msg == null || msg.obj == null) {
+                    return;
+                }
+
+                GNCustomUrlReturnObject obj = (GNCustomUrlReturnObject) msg.obj;
+                Object ret = obj.getMessageObject();
+                String strDummy = new String( (byte[])ret, Charset.forName( "UTF-8" ) );
+
+                try {
+                    JSONObject json = new JSONObject(strDummy);
+                    JSONArray arrayData = json.getJSONArray("data");
+                    makeList( arrayData );
+/*
+                    JSONObject data = json.getJSONObject("data");
+                    JSONObject listUser = data.getJSONObject("0");
+                    String strName = listUser.getString("name");
+*/
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        String strUrl = Define.BASE_URL +  "api/boss/";
+        GNCustomUrlConnection connection = new GNCustomUrlConnection(handler, strUrl, GNDefine.CONNECTION_GET, null, null, null, getApplicationContext());
+        connection.start();
+    }
+
+    private void makeList( JSONArray data )
+    {
+        mTargetData.clear();
+
         SelectListAdapter adapter = new SelectListAdapter(getApplicationContext());
+
+        for( int i = 0 ; i < data.length() ; i++ )
+        {
+            try {
+                JSONObject object = data.getJSONObject(i);
+
+                SelectListData listData = new SelectListData();
+
+                String strNumber = object.getString("id");
+                String strName = object.getString("name");
+                String strTeam = object.getString("affiliation");
+                String strTime = object.getString("start_datetime");
+
+                listData.setListNo(strNumber);
+                listData.setTeam(strTeam);
+                listData.setTargetName(strName);
+                listData.setStartTime(strTime);
+
+                mTargetData.add(listData);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+
+
 /*
         for( int i = 0 ; i < 5 ; i++ )
         {
@@ -113,6 +211,7 @@ public class SelectAcitivity extends BaseActivity
             adapter.add(data);
         }
 */
+/*
         SelectListData dataTaki = new SelectListData();
         dataTaki.setListNo("SELECT:01");
         dataTaki.setTeam("Z14 推進期間");
@@ -138,32 +237,15 @@ public class SelectAcitivity extends BaseActivity
         mTargetData.add(dataKubo);
         mTargetData.add(dataMatsu);
         mTargetData.add(dataYama);
-
+*/
         for( int i = 0 ; i < mTargetData.size() ; i++ )
         {
             adapter.add(mTargetData.get(i));
         }
 
-
-
         ListView list = (ListView)findViewById(R.id.select_list);
         list.setAdapter(adapter);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                playSound( miSoundId );
-
-                Intent intent = new Intent( getApplicationContext(), WaitActivity.class );
-                intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP );
-                intent.putExtra("id", position);
-                intent.putExtra("target", (Serializable) mTargetData.get(position));
-                startActivity( intent );
-                overridePendingTransition(0, 0);
-            }
-        });
-
-        TextView title = (TextView)findViewById(R.id.state_title);
-        title.setText("SELECT");
-
+        list.invalidate();
     }
+
 }

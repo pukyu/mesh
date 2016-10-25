@@ -16,4 +16,6 @@
     <color name="pink">#FF00FF</color>
     <color name="winColor">#eb0000</color>
     <color name="winYellow">#ffff9d</color>
+    <color name="loseColor">#8500e2</color>
+    <color name="drawColor">#005a64</color>
 </resources>

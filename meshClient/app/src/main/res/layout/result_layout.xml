@@ -21,22 +21,6 @@
         android:layout_centerHorizontal="true"
         android:src="@drawable/gu_bg" />
 
-    <include
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        layout="@layout/header_layout"
-        android:id="@+id/status_layout"/>
-
-    <TextView
-        android:text="争奪戦結果"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/sub_title"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/status_layout"
-        android:textColor="@color/gray"
-        android:textSize="18dp"/>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -157,13 +141,199 @@
         android:layout_marginBottom="20dp"
         android:layout_marginRight="20dp"/>
 
-    <ImageView
-        android:layout_width="300dp"
-        android:id="@+id/main_image"
-        android:src="@drawable/win"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:layout_below="@+id/sub_title"
         android:layout_above="@+id/result_infor"
-        android:layout_centerInParent="true"
-        android:layout_height="wrap_content"/>
+        android:id="@+id/result_image_layout">
+
+        <RelativeLayout
+            android:layout_width="300dp"
+            android:id="@+id/star_layout"
+            android:layout_centerInParent="true"
+            android:layout_height="250dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/kira_s"
+                android:id="@+id/star_s_right"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="25dp"
+                android:layout_marginTop="94dp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/kira_s"
+                android:id="@+id/star_s_bottom_right"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="14dp"
+                android:layout_marginRight="50dp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/kira_s"
+                android:id="@+id/star_s_bottom"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="11dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="100dp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/kira_s"
+                android:id="@+id/star_s_bottom_left"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="11dp"
+                android:layout_marginLeft="75dp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/kira_s"
+                android:id="@+id/star_s_left"
+                android:layout_marginTop="153dp"
+                android:layout_marginLeft="20dp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/kira_s"
+                android:id="@+id/star_s_top_left"
+                android:layout_marginTop="42dp"
+                android:layout_marginLeft="38dp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/kira_s"
+                android:id="@+id/star_s_top"
+                android:layout_marginLeft="168dp"
+                android:layout_marginTop="19dp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/kira_m"
+                android:id="@+id/star_m_bottom"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="141dp"
+                android:layout_marginBottom="2dp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/kira_m"
+                android:id="@+id/star_m_right"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="35dp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/kira_l"
+                android:id="@+id/star_l_right"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="78dp"
+                android:layout_marginRight="6dp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/kira_l"
+                android:id="@+id/star_l_left"
+                android:layout_marginTop="95dp"
+                android:layout_marginLeft="5dp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/kira_l"
+                android:id="@+id/star_l_top"
+                android:layout_marginLeft="119dp"
+                />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:id="@+id/main_layout">
+
+            <ImageView
+                android:id="@+id/main_image"
+                android:src="@drawable/win"
+                android:layout_height="141dp"
+                android:layout_centerVertical="false"
+                android:adjustViewBounds="true"
+                android:layout_centerInParent="false"
+                android:layout_width="240dp"
+                android:layout_centerHorizontal="true"/>
+
+            <Button
+                android:text="CONTINUE"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_continue"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="false"
+                android:layout_below="@+id/main_image"
+                android:background="@drawable/round_corner_selector"
+                android:layout_width="200dp"
+                android:visibility="gone"
+                android:layout_marginTop="30dp"/>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/alpha_down_layout"
+        android:visibility="visible">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/start_back_color"
+            android:background="@color/black">
+
+        </FrameLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView7"
+            android:scaleType="fitXY"
+            android:adjustViewBounds="true"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/gu_bg" />
+
+
+    </RelativeLayout>
+
+    <include
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        layout="@layout/header_layout"
+        android:id="@+id/status_layout"/>
+
+    <TextView
+        android:text="争奪戦結果"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sub_title"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/status_layout"
+        android:textColor="@color/gray"
+        android:textSize="18dp"/>
 
 </RelativeLayout>

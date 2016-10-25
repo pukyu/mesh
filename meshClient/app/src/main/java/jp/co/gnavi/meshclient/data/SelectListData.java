@@ -13,6 +13,7 @@ public class SelectListData implements Serializable
     String mstrListNo = "";
     String mstrTeam = "";
     String mstrTargetName = "";
+    String mstrStartTime = "";
 
     String mstrIconImageUrl = null;
     int miIconResourceId = Utility.INVALID_ID;
@@ -70,4 +71,13 @@ public class SelectListData implements Serializable
     }
 
 
+    public void setStartTime( String strDate )
+    {
+        mstrStartTime = strDate;
+    }
+
+    public String getStartTime()
+    {
+        return mstrStartTime;
+    }
 }

@@ -3,7 +3,10 @@ package jp.co.gnavi.meshclient.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.DisplayMetrics;
+import android.view.WindowManager;
 
+import jp.co.gnavi.lib.utility.GNUtility;
 import jp.co.gnavi.meshclient.R;
 import jp.co.gnavi.meshclient.common.Utility;
 
@@ -50,6 +53,14 @@ public class SplashActivity extends BaseActivity {
      */
     private void initialize() {
         Utility.initialize();
+
+        int height = GNUtility.getDisplayHeight( this );
+        int width = GNUtility.getDisplayWidth( this );
+
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+
 
         Runnable runnable = new Runnable() {
             @Override

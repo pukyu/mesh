@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.view.KeyEvent;
 import android.os.Looper;
 import android.util.Log;
@@ -24,7 +25,17 @@ import com.mlkcca.client.DataStore;
 import com.mlkcca.client.DataStoreEventListener;
 import com.mlkcca.client.MilkCocoa;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.nio.charset.Charset;
+
+import jp.co.gnavi.lib.common.GNDefine;
+import jp.co.gnavi.lib.connection.GNCustomUrlConnection;
+import jp.co.gnavi.lib.connection.GNCustomUrlReturnObject;
 import jp.co.gnavi.meshclient.R;
+import jp.co.gnavi.meshclient.common.Define;
 import jp.co.gnavi.meshclient.common.Utility;
 import jp.co.gnavi.meshclient.data.SelectListData;
 
@@ -126,6 +137,7 @@ public class WaitActivity extends BaseActivity {
      * 初期化
      */
     private void initialize() {
+        sendRegist();
 
         // TODO:仮
         changeStateWait();
@@ -175,6 +187,7 @@ public class WaitActivity extends BaseActivity {
         });
 
         ImageView iconImage = (ImageView)findViewById(R.id.user_icon);
+/*
         iconImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -182,11 +195,13 @@ public class WaitActivity extends BaseActivity {
                 changeStateReady();
             }
         });
-
+*/
         ImageView backSelectImage = (ImageView)findViewById(R.id.reselect);
         backSelectImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sendUnRegist();
+
                 Intent intent = new Intent( WaitActivity.this, SelectAcitivity.class );
                 intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP );
                 startActivity( intent );
@@ -261,6 +276,7 @@ public class WaitActivity extends BaseActivity {
 
         ImageView backSelectImage = (ImageView)findViewById(R.id.reselect);
         backSelectImage.setEnabled(true);
+        backSelectImage.setVisibility(View.VISIBLE);
     }
 
     private void changeStateReady()
@@ -295,12 +311,18 @@ public class WaitActivity extends BaseActivity {
         stateSubTitleLayout.setVisibility(View.VISIBLE);
 
         ImageView backSelectImage = (ImageView)findViewById(R.id.reselect);
-        backSelectImage.setEnabled(false);
+//        backSelectImage.setEnabled(false);
+        backSelectImage.setVisibility(View.INVISIBLE);
 
 
         new Handler().post(new Runnable() {
             @Override
             public void run() {
+                if( miState != STATE_READY )
+                {
+                    return;
+                }
+
                 countDown();
             }
         });
@@ -312,7 +334,12 @@ public class WaitActivity extends BaseActivity {
 
         if( miNowCount <= 0 )
         {
-            changeStateStart();
+//            changeStateStart();
+            return;
+        }
+
+        if( miState != STATE_READY )
+        {
             return;
         }
 
@@ -324,7 +351,7 @@ public class WaitActivity extends BaseActivity {
             public void run() {
                 countDown();
             }
-        }, 1000);
+        }, 950);
     }
 
     private int getCountResource( int iCount )
@@ -384,7 +411,7 @@ public class WaitActivity extends BaseActivity {
 
         RelativeLayout stateSubTitleLayout = (RelativeLayout)findViewById(R.id.state_sub_title);
         stateSubTitleLayout.setVisibility(View.VISIBLE);
-
+/*
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -394,6 +421,7 @@ public class WaitActivity extends BaseActivity {
                 overridePendingTransition(0, 0);
             }
         }, 5000);
+*/
     }
 
     private void setDisplayColorFilter( int iColor )
@@ -512,39 +540,46 @@ public class WaitActivity extends BaseActivity {
                 final String id = data.getValue("id");
 
                 if ("notice".equals(type)) {
-                    // 上司が開始ボタンを押した
+                    // 上司が開始ボタンを押した（カウントダウン開始時刻通知）
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            Log.d("push", "notice " + id);
+                            Utility.customLog("push", "notice " + id, Log.DEBUG);
                         }
                     });
                 }
                 else if ("start".equals(type)) {
-                    // サーバ側で受付が開始された
+                    // サーバ側で受付が開始された（カウントダウン開始通知：黄）
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            Log.d("push", "start " + id);
+                            Utility.customLog("push", "start " + id, Log.DEBUG);
+                            changeStateReady();
                         }
                     });
                 }
                 else if ("finish".equals(type)) {
-                    // カウントダウンが終了した
+                    // カウントダウンが終了した（早押しスタート：赤）
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            Log.d("push", "finish " + id);
+                            Utility.customLog("push", "finish " + id, Log.DEBUG);
+                            changeStateStart();
                         }
                     });
                 }
                 else if ("result".equals(type)) {
-                    // カウントダウンが終了した
+                    // finish が終了した（finish 5 秒後）
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
                             String result = data.getValue("result");
-                            Log.d("push", "result " + id + ":" + result);
+                            Utility.customLog("push", "result " + id + ":" + result, Log.DEBUG);
+
+                            Intent intent = new Intent( getApplicationContext(), ResultActivity.class );
+                            intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP );
+                            startActivity( intent );
+                            overridePendingTransition(0, 0);
                         }
                     });
                 }
@@ -573,5 +608,80 @@ public class WaitActivity extends BaseActivity {
         dataStore.on("push");
         dataStore.on("send");
         Log.d("Milkcocoa", "setuped");
+    }
+
+    private void sendRegist()
+    {
+        Handler handler = new Handler() {
+            public void handleMessage(Message msg) {
+                if (msg == null || msg.obj == null) {
+                    return;
+                }
+
+                GNCustomUrlReturnObject obj = (GNCustomUrlReturnObject) msg.obj;
+                Object ret = obj.getMessageObject();
+
+                if( ret == null )
+                {
+                    return;
+                }
+
+                String strData = new String( (byte[])ret, Charset.forName( "UTF-8" ) );
+
+                try {
+                    Utility.customLog("TEST", "test", Log.DEBUG);
+
+                    JSONObject json = new JSONObject(strData);
+                    JSONArray arrayData = json.getJSONArray("data");
+                    int iCount = arrayData.length();
+
+                    TextView inforTitle = (TextView)findViewById(R.id.infor_text);
+                    inforTitle.setText("他部下" + String.valueOf(iCount) + "名待機中...");
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        String strUrl = Define.BASE_URL +  "api/boss/" + mTargetData.getListNo() + "/regist/";
+        String strParam = "id=0";
+        GNCustomUrlConnection connection = new GNCustomUrlConnection(handler, strUrl, GNDefine.CONNECTION_POST, null, strParam, null, getApplicationContext());
+        connection.start();
+    }
+
+    private void sendUnRegist()
+    {
+        Handler handler = new Handler() {
+            public void handleMessage(Message msg) {
+                if (msg == null || msg.obj == null) {
+                    return;
+                }
+
+                GNCustomUrlReturnObject obj = (GNCustomUrlReturnObject) msg.obj;
+                Object ret = obj.getMessageObject();
+
+                if( ret == null )
+                {
+                    return;
+                }
+
+                String strDummy = new String( (byte[])ret, Charset.forName( "UTF-8" ) );
+
+                try {
+                    JSONObject json = new JSONObject(strDummy);
+
+                    Utility.customLog("TEST", "test", Log.DEBUG);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        String strUrl = Define.BASE_URL +  "api/boss/" + mTargetData.getListNo() + "/unregist/";
+        String strParam = "id=0";
+        GNCustomUrlConnection connection = new GNCustomUrlConnection(handler, strUrl, GNDefine.CONNECTION_POST, null, strParam, null, getApplicationContext());
+        connection.start();
     }
 }

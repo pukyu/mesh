@@ -59,7 +59,7 @@ public class SelectListAdapter extends ArrayAdapter<SelectListData> {
         }
 
         TextView selectNoText = (TextView)convertView.findViewById(R.id.select_no);
-        selectNoText.setText(data.getListNo());
+        selectNoText.setText("SELECT:" + data.getListNo());
 
         TextView teamName = (TextView)convertView.findViewById(R.id.team);
         teamName.setText(data.getTeam());
