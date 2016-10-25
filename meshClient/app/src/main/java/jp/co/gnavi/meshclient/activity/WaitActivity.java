@@ -24,6 +24,7 @@ import com.mlkcca.client.DataElement;
 import com.mlkcca.client.DataStore;
 import com.mlkcca.client.DataStoreEventListener;
 import com.mlkcca.client.MilkCocoa;
+import com.mlkcca.client.Streaming;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -67,7 +68,6 @@ public class WaitActivity extends BaseActivity {
 
     private int mBossId = 0;
     // PUSHプラットフォーム
-
     private MilkCocoa milkCocoa;
     private DataStore dataStore;
 
