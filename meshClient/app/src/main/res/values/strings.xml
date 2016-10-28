@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">meshClient</string>
+    <string name="app_name">上司争奪戦</string>
     <string name="cannot_bluetooth_error">この端末で本アプリは使用できません</string>
     <string name="bluetooth_off">BluetoothをONにしてください</string>
     <string name="mesh_unknown">MacAddressの取得に失敗しました</string>

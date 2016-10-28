@@ -74,8 +74,11 @@ public class BaseActivity extends Activity {
     // とりあえずの固定サウンド。。。もっと使う時に汎用的に。。。
     protected int initializeSound()
     {
+/*
         mSoundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
         return mSoundPool.load(getApplicationContext(), R.raw.decision13, 0);
+*/
+        return 1;
     }
 
     protected void releaseSound()
