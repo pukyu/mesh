@@ -5,6 +5,7 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -12,8 +13,19 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.nio.charset.Charset;
+
+import jp.co.gnavi.lib.common.GNDefine;
+import jp.co.gnavi.lib.connection.GNCustomUrlConnection;
+import jp.co.gnavi.lib.connection.GNCustomUrlReturnObject;
 import jp.co.gnavi.meshclient.R;
+import jp.co.gnavi.meshclient.common.Define;
 import jp.co.gnavi.meshclient.common.Utility;
 
 /**
@@ -268,4 +280,23 @@ public class BaseActivity extends Activity {
 
 
     protected Boolean mbStateArrawAnimation = false;
+
+
+    protected void getBossInformation( final String strBossID )
+    {
+        Handler handler = new Handler() {
+            public void handleMessage(Message msg) {
+                callbackBossInformation( msg );
+            }
+        };
+
+        String strUrl = Define.BASE_URL +  "api/boss/" + strBossID;
+        GNCustomUrlConnection connection = new GNCustomUrlConnection(handler, strUrl, GNDefine.CONNECTION_GET, null, null, null, getApplicationContext());
+        connection.start();
+    }
+
+
+    protected void callbackBossInformation( Message msg )
+    {
+    }
 }

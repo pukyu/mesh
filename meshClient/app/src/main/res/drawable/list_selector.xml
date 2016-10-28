@@ -7,7 +7,7 @@
   android:drawable="@color/clear" />
 <item 
   android:state_pressed="true" 
-  android:drawable="@color/themeColor" />
+  android:drawable="@color/selectColor" />
 <item 
   android:state_selected="true"
   android:state_pressed="false" 

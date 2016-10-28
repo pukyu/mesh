@@ -6,7 +6,7 @@
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="themeColor">#cc00ffff</color>
-    <color name="gray">#898989</color>
+    <color name="gray">#b8b8b8</color>
     <color name="clear">#00000000</color>
     <color name="yellow">#FFFF00</color>
     <color name="alphaYellow">#33FFFF00</color>
@@ -18,4 +18,7 @@
     <color name="winYellow">#ffff9d</color>
     <color name="loseColor">#8500e2</color>
     <color name="drawColor">#005a64</color>
+    <color name="listLine">#009999</color>
+    <color name="selectColor">#6600ffff</color>
+    <color name="green">#cc00FF00</color>
 </resources>

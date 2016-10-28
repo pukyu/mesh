@@ -10,7 +10,9 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
@@ -31,6 +33,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.nio.charset.Charset;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 import jp.co.gnavi.lib.common.GNDefine;
 import jp.co.gnavi.lib.connection.GNCustomUrlConnection;
@@ -58,15 +65,14 @@ public class WaitActivity extends BaseActivity {
     // カウントダウン
     private int miNowCount;
 
+    private int miDrawTime = Utility.INVALID_ID;
+
     // 状態
     private static final int STATE_WAIT = 0;
     private static final int STATE_READY = STATE_WAIT + 1;
     private static final int STATE_START = STATE_READY + 1;
-    private static final int STATE_WIN = STATE_START + 1;
-    private static final int STATE_LOSE = STATE_WIN + 1;
     private int miState = STATE_WAIT;
 
-    private int mBossId = 0;
     // PUSHプラットフォーム
     private MilkCocoa milkCocoa;
     private DataStore dataStore;
@@ -133,10 +139,14 @@ public class WaitActivity extends BaseActivity {
         super.onDestroy();
     }
 
+    private Boolean mbSkipGlobalLayoutChange = false;
+
     /**
      * 初期化
      */
     private void initialize() {
+        mbSkipGlobalLayoutChange = false;
+
         sendRegist();
 
         // TODO:仮
@@ -145,40 +155,60 @@ public class WaitActivity extends BaseActivity {
         makeConnection();
 
         final ImageView circle4 = (ImageView)findViewById(R.id.circle_4);
-        ViewTreeObserver observer4 = circle4.getViewTreeObserver();
+        final ViewTreeObserver observer4 = circle4.getViewTreeObserver();
         observer4.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
+                if( mbSkipGlobalLayoutChange )
+                {
+                    return;
+                }
+
                 int point = circle4.getWidth()/2;
                 setRoopRotateAnimation(circle4, 0, 360, point, point, CIRCLE4_ANIMATE_DURATION);
             }
         });
 
         final ImageView circle3 = (ImageView)findViewById(R.id.circle_3);
-        ViewTreeObserver observer3 = circle3.getViewTreeObserver();
+        final ViewTreeObserver observer3 = circle3.getViewTreeObserver();
         observer3.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
+                if( mbSkipGlobalLayoutChange )
+                {
+                    return;
+                }
+
                 int point = circle3.getWidth()/2;
                 setRoopRotateAnimation(circle3, 360, 0, point, point, CIRCLE3_ANIMATE_DURATION);
             }
         });
 
         final ImageView circle2 = (ImageView)findViewById(R.id.circle_2);
-        ViewTreeObserver observer2 = circle2.getViewTreeObserver();
+        final ViewTreeObserver observer2 = circle2.getViewTreeObserver();
         observer2.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
+                if( mbSkipGlobalLayoutChange )
+                {
+                    return;
+                }
+
                 int point = circle2.getWidth()/2;
                 setRoopRotateAnimation(circle2, 0, 360, point, point, CIRCLE2_ANIMATE_DURATION);
             }
         });
 
         final ImageView circle1 = (ImageView)findViewById(R.id.circle_1);
-        ViewTreeObserver observer1 = circle1.getViewTreeObserver();
+        final ViewTreeObserver observer1 = circle1.getViewTreeObserver();
         observer1.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
+                if( mbSkipGlobalLayoutChange )
+                {
+                    return;
+                }
+
                 int point = circle1.getWidth()/2;
                 RelativeLayout layout = (RelativeLayout)findViewById(R.id.user_layout);
                 int pointy = layout.getHeight()/2;
@@ -225,16 +255,104 @@ public class WaitActivity extends BaseActivity {
         TextView targetName = (TextView)findViewById(R.id.user_name);
         targetName.setText(mTargetData.getTargetName());
 
-        TextView waitTime = (TextView)findViewById(R.id.wait_time);
-        waitTime.setText("15");
+        calcTimer();
     }
 
-    private void setRoopRotateAnimation(View view, int iStart, int iEnd, int iCenterX, int iCenterY, int iDuration )
+    private void calcTimer()
     {
-        RotateAnimation rotate = new RotateAnimation( iStart, iEnd, iCenterX, iCenterY );
+        TextView waitTime = (TextView)findViewById(R.id.wait_time);
+        if( mTargetData.getStartTime() != null )
+        {
+            try{
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                format.setTimeZone(TimeZone.getTimeZone("UTC"));
+                Calendar startTime = Calendar.getInstance();
+                Date startDate = new Date( format.parse(mTargetData.getStartTime()).getTime() );
+                startTime.setTime(startDate);
+
+                Date date = new Date();
+                Calendar nowTime = Calendar.getInstance();
+                nowTime.setTime(date);
+
+                if( startTime.get(Calendar.YEAR) != nowTime.get(Calendar.YEAR)
+                        || startTime.get(Calendar.MONTH) != nowTime.get(Calendar.MONTH)
+                        || startTime.get(Calendar.DAY_OF_MONTH) != nowTime.get(Calendar.DAY_OF_MONTH))
+                {
+                    waitTime.setText("∞");
+                }
+                else
+                {
+                    int iSubHour = startTime.get(Calendar.HOUR_OF_DAY) - nowTime.get(Calendar.HOUR_OF_DAY);
+                    int iSubMinute = startTime.get(Calendar.MINUTE) - nowTime.get(Calendar.MINUTE);
+
+                    miDrawTime = iSubHour * 60 + iSubMinute;
+
+                    if( miDrawTime > 999 )
+                    {
+                        waitTime.setText("∞");
+                    }
+                    else if( miDrawTime < 0 )
+                    {
+                        waitTime.setText( "0" );
+                    }
+                    else
+                    {
+                        waitTime.setText(String.valueOf(miDrawTime));
+                    }
+
+                    if( miDrawTime > 0 )
+                    {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                updateTimer();
+                            }
+                        }, 60 * 1000);
+                    }
+                }
+            }catch (ParseException e) {
+                waitTime.setText("？？？");
+            }
+        }
+        else
+        {
+            waitTime.setText("？？？");
+        }
+    }
+
+    private void updateTimer()
+    {
+        if( miDrawTime == Utility.INVALID_ID || miDrawTime <= 0)
+        {
+            return;
+        }
+
+        TextView waitTime = (TextView)findViewById(R.id.wait_time);
+        miDrawTime--;
+        if( waitTime != null )
+        {
+            waitTime.setText(miDrawTime);
+        }
+
+        if( miDrawTime > 0 )
+        {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    updateTimer();
+                }
+            }, 60 * 1000);
+        }
+    }
+
+    private void setRoopRotateAnimation(View view, float fStart, float fEnd, int iCenterX, int iCenterY, int iDuration )
+    {
+        RotateAnimation rotate = new RotateAnimation( fStart, fEnd, iCenterX, iCenterY );
         rotate.setDuration( iDuration );
         rotate.setInterpolator( new LinearInterpolator() );
         rotate.setRepeatCount( -1 );
+
+        view.clearAnimation();
         view.setAnimation( rotate );
     }
 
@@ -252,6 +370,57 @@ public class WaitActivity extends BaseActivity {
         animSet.setRepeatCount( -1 );
         animSet.setInterpolator( new LinearInterpolator() );
 
+        view.clearAnimation();
+        view.setAnimation( animSet );
+    }
+
+    private void setCloseRotateAnimation(View view, float fStart, float fEnd, int iCenterX, int iCenterY, int iDuration )
+    {
+        ScaleAnimation scale = new ScaleAnimation( 1.0f, 0.0f, 1.0f, 0.0f, iCenterX, iCenterY );
+        RotateAnimation rotate = new RotateAnimation( fStart, fEnd, iCenterX, iCenterY );
+
+        AnimationSet animSet = new AnimationSet( true );
+        animSet.addAnimation( scale );
+        animSet.addAnimation( rotate );
+        animSet.setDuration( iDuration );
+        animSet.setInterpolator( new AccelerateInterpolator() );
+
+        view.clearAnimation();
+        view.setAnimation( animSet );
+    }
+
+    private void setOpenRotateAnimation(final View view, final float fStart, final float fEnd, final int iCenterX, final int iCenterY, final int iOpenDuration, final int iRoopDuration )
+    {
+        float fSub = ( Math.abs( fStart - fEnd ) / ( iRoopDuration / 1000.0f ) ) * ( iOpenDuration / 1000.0f );
+        final float fOpenAnimEnd = fStart < fEnd ? fSub : fEnd - fSub;
+        final float fRoopAnimEnd = fStart < fEnd ? fOpenAnimEnd + 360.0f : fOpenAnimEnd - 360.0f;
+
+        ScaleAnimation scale = new ScaleAnimation( 0.0f, 1.0f, 0.0f, 1.0f, iCenterX, iCenterY );
+        RotateAnimation rotate = new RotateAnimation( fStart, fOpenAnimEnd, iCenterX, iCenterY );
+
+        AnimationSet animSet = new AnimationSet( true );
+        animSet.addAnimation( scale );
+        animSet.addAnimation( rotate );
+        animSet.setDuration( iOpenDuration );
+        animSet.setInterpolator( new AccelerateInterpolator() );
+        animSet.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                setRoopRotateAnimation( view, fOpenAnimEnd, fRoopAnimEnd, iCenterX, iCenterY, iRoopDuration );
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        view.clearAnimation();
         view.setAnimation( animSet );
     }
 
@@ -279,6 +448,80 @@ public class WaitActivity extends BaseActivity {
         backSelectImage.setVisibility(View.VISIBLE);
     }
 
+    private void setFlashAnimation()
+    {
+        final RelativeLayout layout = (RelativeLayout)findViewById(R.id.overlay);
+
+        AlphaAnimation alpha = new AlphaAnimation( 1.0f, 0.0f );
+        alpha.setDuration( 500 );
+        alpha.setInterpolator( new LinearInterpolator() );
+        alpha.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                layout.setVisibility(View.INVISIBLE);
+                layout.clearAnimation();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+
+        layout.clearAnimation();
+        layout.setVisibility(View.VISIBLE);
+        layout.setAnimation( alpha );
+    }
+
+    private final static int CLOSE_ANIM_DURATION = 2000;
+    private final static int OPEN_ANIM_DURATION = 2000;
+    private void readyCountDown()
+    {
+        mbSkipGlobalLayoutChange = true;
+
+        getBossInformation(mTargetData.getListNo());
+
+        setOverlayColorFilter( STATE_WAIT );
+        setFlashAnimation();
+
+        final ImageView circle4 = (ImageView)findViewById(R.id.circle_4);
+        final int iPoint4 = circle4.getWidth()/2;
+        float fEndRotate4 = ( 360.0f / ( CIRCLE4_ANIMATE_DURATION / 1000.0f ) ) * (CLOSE_ANIM_DURATION / 1000.0f);
+        setCloseRotateAnimation(circle4, 0.0f, 360.0f, iPoint4, iPoint4, CLOSE_ANIM_DURATION);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setCircleColorFilter(getResources().getColor(R.color.green));
+                setOpenRotateAnimation(circle4, 0.0f, 360.0f, iPoint4, iPoint4, OPEN_ANIM_DURATION, CIRCLE4_ANIMATE_DURATION / 4 );
+            }
+        }, CLOSE_ANIM_DURATION - 200 );
+
+        final ImageView circle3 = (ImageView)findViewById(R.id.circle_3);
+        final int iPoint3 = circle3.getWidth()/2;
+        float fEndRotate3 = ( 360.0f / ( CIRCLE3_ANIMATE_DURATION / 1000.0f ) ) * (CLOSE_ANIM_DURATION / 1000.0f);
+        setCloseRotateAnimation(circle3, 360.0f, 0.0f, iPoint3, iPoint3, CLOSE_ANIM_DURATION);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setOpenRotateAnimation(circle3, 360.0f, 0.0f, iPoint3, iPoint3, OPEN_ANIM_DURATION, CIRCLE3_ANIMATE_DURATION / 4 );
+            }
+        }, CLOSE_ANIM_DURATION - 200 );
+
+        final ImageView circle2 = (ImageView)findViewById(R.id.circle_2);
+        final int iPoint2 = circle2.getWidth()/2;
+        float fEndRotate2 = ( 360.0f / ( CIRCLE2_ANIMATE_DURATION / 1000.0f ) ) * (CLOSE_ANIM_DURATION / 1000.0f);
+        setCloseRotateAnimation(circle2, 0.0f, 360.0f, iPoint2, iPoint2, CLOSE_ANIM_DURATION);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setOpenRotateAnimation(circle2, 0.0f, 360.0f, iPoint2, iPoint2, OPEN_ANIM_DURATION, CIRCLE2_ANIMATE_DURATION / 4 );
+            }
+        }, CLOSE_ANIM_DURATION - 200 );
+    }
+
     private void changeStateReady()
     {
         if( miState >= STATE_READY )
@@ -288,6 +531,7 @@ public class WaitActivity extends BaseActivity {
 
         miState = STATE_READY;
         miNowCount = 11;
+        mbRestFiveCountDownStart = false;
 
         setDisplayColorFilter(getResources().getColor(R.color.yellow));
         setOverlayColorFilter( STATE_READY );
@@ -330,9 +574,14 @@ public class WaitActivity extends BaseActivity {
 
     private void countDown()
     {
+        if( mbRestFiveCountDownStart )
+        {
+            return;
+        }
+
         miNowCount--;
 
-        if( miNowCount <= 0 )
+        if( miNowCount <= 5 )
         {
 //            changeStateStart();
             return;
@@ -351,8 +600,44 @@ public class WaitActivity extends BaseActivity {
             public void run() {
                 countDown();
             }
+        }, 1000);
+    }
+
+    private Boolean mbRestFiveCountDownStart = false;
+    private void restFiveCountDown()
+    {
+        if( !mbRestFiveCountDownStart )
+        {
+            miNowCount = 5;
+            mbRestFiveCountDownStart = true;
+        }
+        else
+        {
+            miNowCount--;
+        }
+
+        if( miNowCount <= 0 )
+        {
+//            changeStateStart();
+            return;
+        }
+
+        if( miState != STATE_READY )
+        {
+            return;
+        }
+
+        ImageView overlayMainImage = (ImageView)findViewById(R.id.overlay_main_pic);
+        overlayMainImage.setImageResource( getCountResource( miNowCount ) );
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                restFiveCountDown();
+            }
         }, 950);
     }
+
 
     private int getCountResource( int iCount )
     {
@@ -459,6 +744,14 @@ public class WaitActivity extends BaseActivity {
         TextView inforTitle = (TextView)findViewById(R.id.infor_title);
         inforTitle.setTextColor(iColor);
 
+        setCircleColorFilter(iColor);
+
+        ImageView reselect = (ImageView)findViewById(R.id.reselect);
+        reselect.setColorFilter(iColor, PorterDuff.Mode.SRC_IN);
+    }
+
+    private void setCircleColorFilter( int iColor )
+    {
         ImageView circle1 = (ImageView)findViewById(R.id.circle_1);
         circle1.setColorFilter(iColor, PorterDuff.Mode.SRC_IN);
 
@@ -470,9 +763,6 @@ public class WaitActivity extends BaseActivity {
 
         ImageView circle4 = (ImageView)findViewById(R.id.circle_4);
         circle4.setColorFilter(iColor, PorterDuff.Mode.SRC_IN);
-
-        ImageView reselect = (ImageView)findViewById(R.id.reselect);
-        reselect.setColorFilter(iColor, PorterDuff.Mode.SRC_IN);
     }
 
     private void setOverlayColorFilter( int state ) {
@@ -480,8 +770,9 @@ public class WaitActivity extends BaseActivity {
         int iTextColor = getResources().getColor(R.color.white);
         int iAlphaColor = getResources().getColor(R.color.themeColor);
         int iLightColor = iAlphaColor;
-        int iSubTitleColor = getResources().getColor(R.color.white);
+        int iSubTitleColor = getResources().getColor(R.color.gray);
         ImageView mainImage = (ImageView) findViewById(R.id.overlay_main_pic);
+        RelativeLayout overlayInfor = (RelativeLayout)findViewById(R.id.overlay_infor);
         switch (state) {
             case STATE_READY:
                 iAlphaColor = getResources().getColor(R.color.alphaYellow);
@@ -490,6 +781,7 @@ public class WaitActivity extends BaseActivity {
                 mainImage.setImageResource(R.drawable.count_10);
                 iTextColor = getResources().getColor(R.color.black);
                 iSubTitleColor = getResources().getColor(R.color.yellow);
+                overlayInfor.setVisibility(View.VISIBLE);
                 break;
             case STATE_START:
                 iAlphaColor = getResources().getColor(R.color.alphaPink);
@@ -497,10 +789,11 @@ public class WaitActivity extends BaseActivity {
                 strMainText = "上司争奪戦開始";
                 mainImage.setImageResource(R.drawable.push);
                 iSubTitleColor = getResources().getColor(R.color.pink);
+                overlayInfor.setVisibility(View.VISIBLE);
                 break;
-            case STATE_WIN:
-                break;
-            case STATE_LOSE:
+            case STATE_WAIT:
+                strMainText = "上司着席待";
+                overlayInfor.setVisibility(View.INVISIBLE);
                 break;
             default:
                 break;
@@ -509,8 +802,7 @@ public class WaitActivity extends BaseActivity {
         View overlayView = (View) findViewById(R.id.overlay);
         overlayView.setBackgroundColor(iAlphaColor);
 
-        RelativeLayout overlayInfo = (RelativeLayout) findViewById(R.id.overlay_infor);
-        overlayInfo.setBackgroundColor(iLightColor);
+        overlayInfor.setBackgroundColor(iLightColor);
 
         TextView mainTextView = (TextView) findViewById(R.id.overlay_main_text);
         mainTextView.setTextColor(iTextColor);
@@ -522,8 +814,6 @@ public class WaitActivity extends BaseActivity {
 
     private void makeConnection()
     {
-        mBossId = getIntent().getIntExtra("id", 0);
-
         milkCocoa = new MilkCocoa("guitariu6e7lgx.mlkcca.com");
         dataStore = milkCocoa.dataStore("messages");
         dataStore.addDataStoreEventListener(new DataStoreEventListener() {
@@ -539,12 +829,33 @@ public class WaitActivity extends BaseActivity {
                 final String type = data.getValue("type");
                 final String id = data.getValue("id");
 
+                if( !id.equals(mTargetData.getListNo()) )
+                {
+                    return;
+                }
+
                 if ("notice".equals(type)) {
                     // 上司が開始ボタンを押した（カウントダウン開始時刻通知）
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
                             Utility.customLog("push", "notice " + id, Log.DEBUG);
+
+                            // 時間更新
+                            String strDate = data.getValue("datetime");
+                            mTargetData.setStartTime(strDate);
+                            calcTimer();
+
+                            readyCountDown();
+                        }
+                    });
+                }
+                else if("pre_start".equals(type)) {
+                    // カウントダウン開始5秒前
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Utility.customLog("push", "pre_start " + id, Log.DEBUG);
                         }
                     });
                 }
@@ -558,12 +869,23 @@ public class WaitActivity extends BaseActivity {
                         }
                     });
                 }
+                else if("pre_finish".equals(type)) {
+                    // 開始5秒前
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Utility.customLog("push", "pre_finish " + id, Log.DEBUG);
+                            restFiveCountDown();
+                        }
+                    });
+                }
                 else if ("finish".equals(type)) {
                     // カウントダウンが終了した（早押しスタート：赤）
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
                             Utility.customLog("push", "finish " + id, Log.DEBUG);
+
                             changeStateStart();
                         }
                     });
@@ -573,11 +895,11 @@ public class WaitActivity extends BaseActivity {
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            String result = data.getValue("result");
-                            Utility.customLog("push", "result " + id + ":" + result, Log.DEBUG);
+                            Utility.customLog("push", "result " + id, Log.DEBUG);
 
                             Intent intent = new Intent( getApplicationContext(), ResultActivity.class );
                             intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP );
+                            intent.putExtra("target", mTargetData);
                             startActivity( intent );
                             overridePendingTransition(0, 0);
                         }
@@ -629,8 +951,6 @@ public class WaitActivity extends BaseActivity {
                 String strData = new String( (byte[])ret, Charset.forName( "UTF-8" ) );
 
                 try {
-                    Utility.customLog("TEST", "test", Log.DEBUG);
-
                     JSONObject json = new JSONObject(strData);
                     JSONArray arrayData = json.getJSONArray("data");
                     int iCount = arrayData.length();
@@ -638,6 +958,7 @@ public class WaitActivity extends BaseActivity {
                     TextView inforTitle = (TextView)findViewById(R.id.infor_text);
                     inforTitle.setText("他部下" + String.valueOf(iCount) + "名待機中...");
 
+                    Utility.customLog("WAIT", "regist:?" +  "boss id:" + mTargetData.getListNo(), Log.DEBUG);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -671,8 +992,7 @@ public class WaitActivity extends BaseActivity {
                 try {
                     JSONObject json = new JSONObject(strDummy);
 
-                    Utility.customLog("TEST", "test", Log.DEBUG);
-
+                    Utility.customLog("WAIT", "unregist", Log.DEBUG);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -680,8 +1000,48 @@ public class WaitActivity extends BaseActivity {
         };
 
         String strUrl = Define.BASE_URL +  "api/boss/" + mTargetData.getListNo() + "/unregist/";
-        String strParam = "id=0";
-        GNCustomUrlConnection connection = new GNCustomUrlConnection(handler, strUrl, GNDefine.CONNECTION_POST, null, strParam, null, getApplicationContext());
+        GNCustomUrlConnection connection = new GNCustomUrlConnection(handler, strUrl, GNDefine.CONNECTION_POST, null, null, null, getApplicationContext());
         connection.start();
+    }
+
+    @Override
+    protected void callbackBossInformation(Message msg)
+    {
+        if (msg == null || msg.obj == null) {
+
+            return;
+        }
+
+        GNCustomUrlReturnObject obj = (GNCustomUrlReturnObject) msg.obj;
+        Object ret = obj.getMessageObject();
+
+        if( ret == null )
+        {
+            return;
+        }
+
+        String strData = new String( (byte[])ret, Charset.forName( "UTF-8" ) );
+
+        try {
+            JSONObject json = new JSONObject(strData);
+            JSONArray arrayData = json.getJSONArray("data");
+
+            for( int i = 0 ; i < arrayData.length() ; i++ )
+            {
+                JSONObject object = arrayData.getJSONObject(i);
+                String strID = object.getString("id");
+                if( strID.contentEquals( mTargetData.getListNo() ) )
+                {
+                    JSONArray waitArray = object.getJSONArray("register");
+                    int iCount = waitArray.length();
+
+                    TextView inforTitle = (TextView)findViewById(R.id.infor_text);
+                    inforTitle.setText("他部下" + String.valueOf(iCount) + "名待機中...");
+                    break;
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

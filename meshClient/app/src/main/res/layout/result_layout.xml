@@ -12,14 +12,15 @@
     </FrameLayout>
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:id="@+id/imageView"
-        android:scaleType="fitXY"
         android:adjustViewBounds="true"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/gu_bg" />
+        android:src="@drawable/gu_bg"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="60dp"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -48,7 +49,8 @@
             android:textColor="@color/white"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/result_infor_title"
-            android:layout_marginTop="5dp"/>
+            android:layout_marginTop="5dp"
+            android:textSize="15dp"/>
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -69,7 +71,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/text_1st"
-                    android:textColor="@color/winYellow"/>
+                    android:textColor="@color/winYellow"
+                    android:textSize="15dp"/>
 
                 <TextView
                     android:text="山田 太郎"
@@ -78,7 +81,8 @@
                     android:id="@+id/name_1st"
                     android:textColor="@color/white"
                     android:layout_toRightOf="@+id/text_1st"
-                    android:layout_marginLeft="20dp"/>
+                    android:layout_marginLeft="20dp"
+                    android:textSize="15dp"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -92,7 +96,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/text_2nd"
-                    android:textColor="@color/winYellow"/>
+                    android:textColor="@color/winYellow"
+                    android:textSize="15dp"/>
 
                 <TextView
                     android:text="ぐる ナビ子"
@@ -101,7 +106,8 @@
                     android:id="@+id/name_2nd"
                     android:layout_toRightOf="@+id/text_2nd"
                     android:textColor="@color/white"
-                    android:layout_marginLeft="20dp"/>
+                    android:layout_marginLeft="20dp"
+                    android:textSize="15dp"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -115,7 +121,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/text_3rd"
-                    android:textColor="@color/winYellow"/>
+                    android:textColor="@color/winYellow"
+                    android:textSize="15dp"/>
 
                 <TextView
                     android:text="山田 花子"
@@ -124,7 +131,8 @@
                     android:id="@+id/name_3rd"
                     android:layout_marginLeft="20dp"
                     android:layout_toRightOf="@+id/text_3rd"
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/white"
+                    android:textSize="15dp"/>
             </RelativeLayout>
 
         </RelativeLayout>
@@ -196,7 +204,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/kira_s"
+                android:src="@drawable/kira_m"
                 android:id="@+id/star_s_left"
                 android:layout_marginTop="153dp"
                 android:layout_marginLeft="20dp"/>
@@ -297,7 +305,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/alpha_down_layout"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -309,20 +317,21 @@
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:id="@+id/imageView7"
-            android:scaleType="fitXY"
             android:adjustViewBounds="true"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/gu_bg" />
+            android:src="@drawable/gu_bg"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="60dp"/>
 
 
     </RelativeLayout>
 
     <include
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="105dp"
         layout="@layout/header_layout"
         android:id="@+id/status_layout"/>
 
@@ -334,6 +343,7 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/status_layout"
         android:textColor="@color/gray"
-        android:textSize="18dp"/>
+        android:textSize="15dp"
+        android:layout_marginTop="-35dp"/>
 
 </RelativeLayout>

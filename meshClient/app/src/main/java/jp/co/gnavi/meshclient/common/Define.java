@@ -5,6 +5,5 @@ package jp.co.gnavi.meshclient.common;
  */
 
 public class Define {
-
     public final static String BASE_URL = "http://staffwars.azurewebsites.net/";
 }

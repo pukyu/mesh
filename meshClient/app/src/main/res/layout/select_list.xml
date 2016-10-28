@@ -5,17 +5,18 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:id="@+id/imageView"
-        android:scaleType="fitXY"
         android:adjustViewBounds="true"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/gu_bg" />
+        android:src="@drawable/gu_bg"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="60dp"/>
 
     <include
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="105dp"
         layout="@layout/header_layout"
         android:id="@+id/status_layout"/>
 
@@ -25,19 +26,29 @@
         android:layout_height="wrap_content"
         android:id="@+id/sub_title"
         android:textColor="@color/gray"
-        android:textSize="18dp"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/status_layout"/>
+        android:layout_below="@+id/status_layout"
+        android:textSize="15dp"
+        android:layout_marginTop="-35dp"/>
+
+    <TextView
+        android:text="now loading..."
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/now_loading"
+        android:layout_centerInParent="true"
+        android:textColor="@color/white"
+        android:textSize="15dp"/>
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/select_list"
-        android:divider="@color/themeColor"
+        android:divider="@color/listLine"
         android:dividerHeight="1dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/sub_title"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="25dp"
         />
 </RelativeLayout>

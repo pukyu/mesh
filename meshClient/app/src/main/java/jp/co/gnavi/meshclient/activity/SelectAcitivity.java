@@ -125,10 +125,19 @@ public class SelectAcitivity extends BaseActivity
 
         TextView title = (TextView)findViewById(R.id.state_title);
         title.setText("SELECT");
+
+        TextView nowLoading = (TextView)findViewById(R.id.now_loading);
+        nowLoading.setVisibility(View.VISIBLE);
     }
 
     private void load()
     {
+        final ListView selectList = (ListView)findViewById(R.id.select_list);
+        selectList.setVisibility(View.INVISIBLE);
+
+        final TextView nowLoading = (TextView)findViewById(R.id.now_loading);
+        nowLoading.setVisibility(View.VISIBLE);
+
         Handler handler = new Handler() {
             public void handleMessage(Message msg) {
                 if (msg == null || msg.obj == null) {
@@ -137,10 +146,10 @@ public class SelectAcitivity extends BaseActivity
 
                 GNCustomUrlReturnObject obj = (GNCustomUrlReturnObject) msg.obj;
                 Object ret = obj.getMessageObject();
-                String strDummy = new String( (byte[])ret, Charset.forName( "UTF-8" ) );
+                String strObject = new String( (byte[])ret, Charset.forName( "UTF-8" ) );
 
                 try {
-                    JSONObject json = new JSONObject(strDummy);
+                    JSONObject json = new JSONObject(strObject);
                     JSONArray arrayData = json.getJSONArray("data");
                     makeList( arrayData );
 /*
@@ -246,6 +255,11 @@ public class SelectAcitivity extends BaseActivity
         ListView list = (ListView)findViewById(R.id.select_list);
         list.setAdapter(adapter);
         list.invalidate();
+
+        TextView nowLoading = (TextView)findViewById(R.id.now_loading);
+        nowLoading.setVisibility(View.GONE);
+
+        list.setVisibility(View.VISIBLE);
     }
 
 }
