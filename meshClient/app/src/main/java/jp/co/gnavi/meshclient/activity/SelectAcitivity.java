@@ -184,7 +184,7 @@ public class SelectAcitivity extends BaseActivity
 
                 String strNumber = object.getString("id");
                 String strName = object.getString("name");
-                String strTeam = object.getString("affiliation");
+                String strTeam = object.getString("organization");
                 String strTime = object.getString("start_datetime");
 
                 listData.setListNo(strNumber);

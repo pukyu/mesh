@@ -137,16 +137,17 @@ public class WaitActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        dataStore.removeDataStoreEventListener();
+        dataStore = null;
+        milkCocoa = null;
     }
 
-    private Boolean mbSkipGlobalLayoutChange = false;
 
     /**
      * 初期化
      */
     private void initialize() {
-        mbSkipGlobalLayoutChange = false;
-
         sendRegist();
 
         // TODO:仮
@@ -159,13 +160,10 @@ public class WaitActivity extends BaseActivity {
         observer4.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                if( mbSkipGlobalLayoutChange )
-                {
-                    return;
-                }
-
                 int point = circle4.getWidth()/2;
                 setRoopRotateAnimation(circle4, 0, 360, point, point, CIRCLE4_ANIMATE_DURATION);
+
+                circle4.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
 
@@ -174,13 +172,10 @@ public class WaitActivity extends BaseActivity {
         observer3.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                if( mbSkipGlobalLayoutChange )
-                {
-                    return;
-                }
-
                 int point = circle3.getWidth()/2;
                 setRoopRotateAnimation(circle3, 360, 0, point, point, CIRCLE3_ANIMATE_DURATION);
+
+                circle3.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
 
@@ -189,13 +184,10 @@ public class WaitActivity extends BaseActivity {
         observer2.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                if( mbSkipGlobalLayoutChange )
-                {
-                    return;
-                }
-
                 int point = circle2.getWidth()/2;
                 setRoopRotateAnimation(circle2, 0, 360, point, point, CIRCLE2_ANIMATE_DURATION);
+
+                circle2.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
 
@@ -204,15 +196,12 @@ public class WaitActivity extends BaseActivity {
         observer1.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                if( mbSkipGlobalLayoutChange )
-                {
-                    return;
-                }
-
                 int point = circle1.getWidth()/2;
                 RelativeLayout layout = (RelativeLayout)findViewById(R.id.user_layout);
                 int pointy = layout.getHeight()/2;
                 setRoopScaleAlphaAnimation( circle1, point, pointy, CIRCLE1_ANIMATE_DURATION );
+
+                circle1.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
 
@@ -331,10 +320,13 @@ public class WaitActivity extends BaseActivity {
         miDrawTime--;
         if( waitTime != null )
         {
-            waitTime.setText(miDrawTime);
+            if( waitTime != null )
+            {
+                waitTime.setText(miDrawTime);
+            }
         }
 
-        if( miDrawTime > 0 )
+        if( miDrawTime > 0 && waitTime != null )
         {
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -426,7 +418,7 @@ public class WaitActivity extends BaseActivity {
 
     private void changeStateWait()
     {
-        setDisplayColorFilter(getResources().getColor(R.color.themeColor));
+        setDisplayColorFilter(getResources().getColor(R.color.themeColorNonAlpha));
 
         TextView stateText = (TextView)findViewById(R.id.state_title);
         stateText.setText("WAIT");
@@ -434,8 +426,8 @@ public class WaitActivity extends BaseActivity {
         TextView subTitle = (TextView)findViewById(R.id.sub_title);
         subTitle.setText("上司着席待");
 
-        RelativeLayout readyLayout = (RelativeLayout)findViewById(R.id.overlay);
-        readyLayout.setVisibility(View.INVISIBLE);
+        RelativeLayout readyLayout = (RelativeLayout)findViewById(R.id.overlay_layout);
+        readyLayout.setVisibility(View.GONE);
 
         RelativeLayout subTitleWaitLayout = (RelativeLayout)findViewById(R.id.wait_layout);
         subTitleWaitLayout.setVisibility(View.VISIBLE);
@@ -450,7 +442,7 @@ public class WaitActivity extends BaseActivity {
 
     private void setFlashAnimation()
     {
-        final RelativeLayout layout = (RelativeLayout)findViewById(R.id.overlay);
+        final RelativeLayout layout = (RelativeLayout)findViewById(R.id.overlay_layout);
 
         AlphaAnimation alpha = new AlphaAnimation( 1.0f, 0.0f );
         alpha.setDuration( 500 );
@@ -462,7 +454,7 @@ public class WaitActivity extends BaseActivity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                layout.setVisibility(View.INVISIBLE);
+                layout.setVisibility(View.GONE);
                 layout.clearAnimation();
             }
 
@@ -480,8 +472,6 @@ public class WaitActivity extends BaseActivity {
     private final static int OPEN_ANIM_DURATION = 2000;
     private void readyCountDown()
     {
-        mbSkipGlobalLayoutChange = true;
-
         getBossInformation(mTargetData.getListNo());
 
         setOverlayColorFilter( STATE_WAIT );
@@ -545,7 +535,7 @@ public class WaitActivity extends BaseActivity {
         TextView subText = (TextView)findViewById(R.id.state_sub_text);
         subText.setText("各自争奪戦準備後待機推奨");
 
-        RelativeLayout readyLayout = (RelativeLayout)findViewById(R.id.overlay);
+        RelativeLayout readyLayout = (RelativeLayout)findViewById(R.id.overlay_layout);
         readyLayout.setVisibility(View.VISIBLE);
 
         RelativeLayout subTitleWaitLayout = (RelativeLayout)findViewById(R.id.wait_layout);
@@ -581,7 +571,7 @@ public class WaitActivity extends BaseActivity {
 
         miNowCount--;
 
-        if( miNowCount <= 5 )
+        if( miNowCount <= 0 )
         {
 //            changeStateStart();
             return;
@@ -600,7 +590,7 @@ public class WaitActivity extends BaseActivity {
             public void run() {
                 countDown();
             }
-        }, 1000);
+        }, 950);
     }
 
     private Boolean mbRestFiveCountDownStart = false;
@@ -688,7 +678,7 @@ public class WaitActivity extends BaseActivity {
         TextView subText = (TextView)findViewById(R.id.state_sub_text);
         subText.setText("神経集中/最速早押");
 
-        RelativeLayout readyLayout = (RelativeLayout)findViewById(R.id.overlay);
+        RelativeLayout readyLayout = (RelativeLayout)findViewById(R.id.overlay_layout);
         readyLayout.setVisibility(View.VISIBLE);
 
         RelativeLayout subTitleWaitLayout = (RelativeLayout)findViewById(R.id.wait_layout);
@@ -772,6 +762,7 @@ public class WaitActivity extends BaseActivity {
         int iLightColor = iAlphaColor;
         int iSubTitleColor = getResources().getColor(R.color.gray);
         ImageView mainImage = (ImageView) findViewById(R.id.overlay_main_pic);
+        ImageView pushImage = (ImageView) findViewById(R.id.push_img);
         RelativeLayout overlayInfor = (RelativeLayout)findViewById(R.id.overlay_infor);
         switch (state) {
             case STATE_READY:
@@ -779,6 +770,7 @@ public class WaitActivity extends BaseActivity {
                 iLightColor = getResources().getColor(R.color.lightYellow);
                 strMainText = "上司争奪戦開始迄";
                 mainImage.setImageResource(R.drawable.count_10);
+                pushImage.setVisibility(View.INVISIBLE);
                 iTextColor = getResources().getColor(R.color.black);
                 iSubTitleColor = getResources().getColor(R.color.yellow);
                 overlayInfor.setVisibility(View.VISIBLE);
@@ -787,7 +779,8 @@ public class WaitActivity extends BaseActivity {
                 iAlphaColor = getResources().getColor(R.color.alphaPink);
                 iLightColor = getResources().getColor(R.color.lightPink);
                 strMainText = "上司争奪戦開始";
-                mainImage.setImageResource(R.drawable.push);
+                mainImage.setVisibility(View.INVISIBLE);
+                pushImage.setVisibility(View.VISIBLE);
                 iSubTitleColor = getResources().getColor(R.color.pink);
                 overlayInfor.setVisibility(View.VISIBLE);
                 break;
@@ -875,7 +868,7 @@ public class WaitActivity extends BaseActivity {
                         @Override
                         public void run() {
                             Utility.customLog("push", "pre_finish " + id, Log.DEBUG);
-                            restFiveCountDown();
+//                            restFiveCountDown();
                         }
                     });
                 }
@@ -895,13 +888,19 @@ public class WaitActivity extends BaseActivity {
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
+                            String result = data.getValue("result");
                             Utility.customLog("push", "result " + id, Log.DEBUG);
 
                             Intent intent = new Intent( getApplicationContext(), ResultActivity.class );
                             intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP );
                             intent.putExtra("target", mTargetData);
+                            intent.putExtra("result", result.substring(1, result.length()-1) );
                             startActivity( intent );
                             overridePendingTransition(0, 0);
+
+
+                            miDrawTime = 0;
+                            dataStore.removeDataStoreEventListener();
                         }
                     });
                 }
@@ -966,7 +965,7 @@ public class WaitActivity extends BaseActivity {
         };
 
         String strUrl = Define.BASE_URL +  "api/boss/" + mTargetData.getListNo() + "/regist/";
-        String strParam = "id=0";
+        String strParam = "code=" + Utility.getSavedStringData(getApplicationContext(), "code");
         GNCustomUrlConnection connection = new GNCustomUrlConnection(handler, strUrl, GNDefine.CONNECTION_POST, null, strParam, null, getApplicationContext());
         connection.start();
     }
@@ -1000,7 +999,8 @@ public class WaitActivity extends BaseActivity {
         };
 
         String strUrl = Define.BASE_URL +  "api/boss/" + mTargetData.getListNo() + "/unregist/";
-        GNCustomUrlConnection connection = new GNCustomUrlConnection(handler, strUrl, GNDefine.CONNECTION_POST, null, null, null, getApplicationContext());
+        String strParam = "code=" + Utility.getSavedStringData(getApplicationContext(), "code");
+        GNCustomUrlConnection connection = new GNCustomUrlConnection(handler, strUrl, GNDefine.CONNECTION_POST, null, strParam, null, getApplicationContext());
         connection.start();
     }
 
@@ -1024,22 +1024,14 @@ public class WaitActivity extends BaseActivity {
 
         try {
             JSONObject json = new JSONObject(strData);
-            JSONArray arrayData = json.getJSONArray("data");
 
-            for( int i = 0 ; i < arrayData.length() ; i++ )
-            {
-                JSONObject object = arrayData.getJSONObject(i);
-                String strID = object.getString("id");
-                if( strID.contentEquals( mTargetData.getListNo() ) )
-                {
-                    JSONArray waitArray = object.getJSONArray("register");
-                    int iCount = waitArray.length();
+            JSONObject object = json.getJSONObject("data");
+            JSONArray waitArray = object.getJSONArray("register");
+            int iCount = waitArray.length();
 
-                    TextView inforTitle = (TextView)findViewById(R.id.infor_text);
-                    inforTitle.setText("他部下" + String.valueOf(iCount) + "名待機中...");
-                    break;
-                }
-            }
+            TextView inforTitle = (TextView)findViewById(R.id.infor_text);
+            inforTitle.setText("他部下" + String.valueOf(iCount) + "名待機中...");
+
         } catch (JSONException e) {
             e.printStackTrace();
         }

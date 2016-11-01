@@ -62,7 +62,7 @@ public class GcmIntentService extends IntentService {
 
         final NotificationCompat.Builder builder = new NotificationCompat.Builder( this );
         builder.setContentTitle( getString( R.string.app_name ) );
-        builder.setSmallIcon( R.drawable.icon );
+        builder.setSmallIcon( R.drawable.ic_launcher );
         builder.setStyle( new NotificationCompat.BigTextStyle().bigText( msg ) );
         builder.setContentText( msg );
         builder.setWhen( System.currentTimeMillis() );

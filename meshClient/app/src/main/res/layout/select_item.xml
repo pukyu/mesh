@@ -19,7 +19,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/lock_on_1"
+        android:src="@drawable/user_line"
         android:id="@+id/imageView2"
         android:layout_alignTop="@+id/target_icon"
         android:layout_alignBottom="@+id/target_icon"
@@ -37,7 +37,7 @@
         android:layout_alignTop="@+id/text_layout"
         android:layout_alignBottom="@+id/text_layout"
         android:layout_centerVertical="true"
-        android:padding="1dp"/>
+        android:padding="2dp"/>
 
     <RelativeLayout
         android:layout_width="match_parent"

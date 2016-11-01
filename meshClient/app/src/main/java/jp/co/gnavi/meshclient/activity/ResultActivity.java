@@ -27,10 +27,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import jp.co.gnavi.lib.connection.GNCustomUrlReturnObject;
 import jp.co.gnavi.meshclient.R;
 import jp.co.gnavi.meshclient.adpter.SelectListAdapter;
+import jp.co.gnavi.meshclient.common.Utility;
 import jp.co.gnavi.meshclient.data.SelectListData;
 
 /**
@@ -44,6 +47,12 @@ public class ResultActivity extends BaseActivity
     public static final int RESULT_DRAW = RESULT_LOSE + 1;
 
     private int     miResultType;
+
+    private static final int STAR_ANIM_NON = 0;
+    private static final int STAR_ANIM_STOP = STAR_ANIM_NON  + 1;
+    private static final int STAR_ANIM_RESTART = STAR_ANIM_STOP + 1;
+
+    private int     miStarAnimationState = STAR_ANIM_NON;
 
     private SelectListData mTargetData;
 
@@ -65,8 +74,10 @@ public class ResultActivity extends BaseActivity
 
         Intent intent = getIntent();
         mTargetData = (SelectListData) intent.getSerializableExtra("target");
+        String strResult = intent.getStringExtra("result");
 
         initalize();
+//        calcResult( strResult );
     }
 
     @Override
@@ -82,6 +93,24 @@ public class ResultActivity extends BaseActivity
         {
             mbStateArrawAnimation = true;
             startArrowAnimation();
+
+        }
+
+        if ( miResultType == RESULT_WIN )
+        {
+            if( miStarAnimationState == STAR_ANIM_NON )
+            {
+                resetStar();
+            }
+            else if( miStarAnimationState == STAR_ANIM_STOP )
+            {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        resetStar();
+                    }
+                }, STAR_GLITTER_DURATION);
+            }
         }
     }
 
@@ -89,6 +118,7 @@ public class ResultActivity extends BaseActivity
     protected void onPause() {
         super.onPause();
 
+        clearStartAnimation();
         clearArrawAnimation();
         mbStateArrawAnimation = false;
     }
@@ -110,7 +140,13 @@ public class ResultActivity extends BaseActivity
 
         setCommon();
 
-        getBossInformation( mTargetData.getListNo() );
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getBossInformation( mTargetData.getListNo() );
+            }
+        }, 1000);
     }
 
     private static final int START_ANIM_DELAY = 3000;
@@ -212,8 +248,6 @@ public class ResultActivity extends BaseActivity
 
         RelativeLayout resultLayout = (RelativeLayout)findViewById(R.id.result_data);
         resultLayout.setVisibility(View.VISIBLE);
-
-        TextView resultDiscription = (TextView)findViewById(R.id.reuslt_description);
     }
 
     private void setLose()
@@ -323,9 +357,65 @@ public class ResultActivity extends BaseActivity
         reselect.setColorFilter(iColor, PorterDuff.Mode.SRC_IN);
     }
 
+    private void clearStartAnimation()
+    {
+        miStarAnimationState = STAR_ANIM_STOP;
+
+        // 時計回り順
+        final ImageView imgStarLTop = (ImageView)findViewById(R.id.star_l_top);
+        imgStarLTop.clearAnimation();
+        imgStarLTop.setVisibility(View.INVISIBLE);
+
+        final ImageView imgStarSTop = (ImageView)findViewById(R.id.star_s_top);
+        imgStarSTop.clearAnimation();
+        imgStarSTop.setVisibility(View.INVISIBLE);
+
+        final ImageView imgStarMRight = (ImageView)findViewById(R.id.star_m_right);
+        imgStarMRight.clearAnimation();
+        imgStarMRight.setVisibility(View.INVISIBLE);
+
+        final ImageView imgStarSRight = (ImageView)findViewById(R.id.star_s_right);
+        imgStarSRight.clearAnimation();
+        imgStarSRight.setVisibility(View.INVISIBLE);
+
+        final ImageView imgStarLRight = (ImageView)findViewById(R.id.star_l_right);
+        imgStarLRight.clearAnimation();
+        imgStarLRight.setVisibility(View.INVISIBLE);
+
+        final ImageView imgStarSBottomRight = (ImageView)findViewById(R.id.star_s_bottom_right);
+        imgStarSBottomRight.clearAnimation();
+        imgStarSBottomRight.setVisibility(View.INVISIBLE);
+
+        final ImageView imgStarSBottom = (ImageView)findViewById(R.id.star_s_bottom);
+        imgStarSBottom.clearAnimation();
+        imgStarSBottom.setVisibility(View.INVISIBLE);
+
+        final ImageView imgStarMBottom = (ImageView)findViewById(R.id.star_m_bottom);
+        imgStarMBottom.clearAnimation();
+        imgStarMBottom.setVisibility(View.INVISIBLE);
+
+        final ImageView imgStarSBottomLeft = (ImageView)findViewById(R.id.star_s_bottom_left);
+        imgStarSBottomLeft.clearAnimation();
+        imgStarSBottomLeft.setVisibility(View.INVISIBLE);
+
+        final ImageView imgStarSLeft = (ImageView)findViewById(R.id.star_s_left);
+        imgStarSLeft.clearAnimation();
+        imgStarSLeft.setVisibility(View.INVISIBLE);
+
+        final ImageView imgStarLLeft = (ImageView)findViewById(R.id.star_l_left);
+        imgStarLLeft.clearAnimation();
+        imgStarLLeft.setVisibility(View.INVISIBLE);
+
+        final ImageView imgStarSTopLeft = (ImageView)findViewById(R.id.star_s_top_left);
+        imgStarSTopLeft.clearAnimation();
+        imgStarSTopLeft.setVisibility(View.INVISIBLE);
+    }
+
     private final static int STAR_DEFAULT_ANIM_DELAY = 1000;
     private void resetStar()
     {
+        miStarAnimationState = STAR_ANIM_RESTART;
+
         int iCount = RESULT_ANIMATION_DELAY + RESULT_ANIMATION_DURATION + 1000;
         int iLargeStartCount = RESULT_ANIMATION_DELAY;
 
@@ -456,7 +546,7 @@ public class ResultActivity extends BaseActivity
         }, iCount);
     }
 
-    private static final int STAR_APPEAR_ANIM_DURATION = 400;
+    private static final int STAR_APPEAR_ANIM_DURATION = 500;
     private void setStarAppearanceAnimation( final ImageView view )
     {
         final int iCenterX = view.getWidth()/2;
@@ -532,14 +622,19 @@ public class ResultActivity extends BaseActivity
 
             @Override
             public void onAnimationEnd(Animation animation) {
+                if( miStarAnimationState != STAR_ANIM_RESTART )
+                {
+                    return;
+                }
+
                 if( iType == STAR_GLITTER_TYPE_OFF )
                 {
-                    new Handler().postDelayed(new Runnable() {
+                    new Handler().post(new Runnable() {
                         @Override
                         public void run() {
                             setStarGlitterAnimation( view, STAR_GLITTER_TYPE_ON, iCenterX, iCenterY );
                         }
-                    }, STAR_GLITTER_DURATION );
+                    });
                 }
                 else
                 {
@@ -595,6 +690,11 @@ public class ResultActivity extends BaseActivity
 
             @Override
             public void onAnimationEnd(Animation animation) {
+                if( miStarAnimationState != STAR_ANIM_RESTART )
+                {
+                    return;
+                }
+
                 if( iType == STAR_GLITTER_TYPE_OFF )
                 {
                     new Handler().post(new Runnable() {
@@ -627,18 +727,11 @@ public class ResultActivity extends BaseActivity
     }
 
     private int[] mResultTextIDs = {R.id.name_1st, R.id.name_2nd, R.id.name_3rd};
+    private int[] mResultTimeIDs = {R.id.time_1st, R.id.time_2nd, R.id.time_3rd};
 
     @Override
     protected void callbackBossInformation( Message msg )
     {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                startAlphaDownAnimation();
-            }
-        }, START_ANIM_DELAY);
-
-
         if (msg == null || msg.obj == null) {
             setDraw();
             return;
@@ -657,65 +750,37 @@ public class ResultActivity extends BaseActivity
 
         try {
             JSONObject json = new JSONObject(strData);
-            JSONArray arrayData = json.getJSONArray("data");
+            JSONObject data = json.getJSONObject("data");
 
-            for( int i = 0 ; i < arrayData.length() ; i++ )
-            {
-                JSONObject object = arrayData.getJSONObject(i);
-                String strID = object.getString("id");
-                if( strID.contentEquals( mTargetData.getListNo() ) )
-                {
-                    // TODO 配列でこない恐れ有
-                    JSONArray resultArray = object.getJSONArray("push_list");
+            JSONArray array = data.getJSONArray("push_list");
 
-                    // 1 位～ 3 位の名前表示
-                    for( int j = 0 ; j < 3 ; j++ )
-                    {
-                        if( j < resultArray.length() )
-                        {
-                            JSONObject parsonData = resultArray.getJSONObject(j);
-                            String strName = parsonData.getString("name");
-
-                            TextView view = (TextView)findViewById(mResultTextIDs[j]);
-                            view.setText( strName );
-                        }
-                        else
-                        {
-                            TextView view = (TextView)findViewById(mResultTextIDs[j]);
-                            view.setText( "---" );
-                        }
-                    }
-
-                    // TODO API にあわせる
-                    JSONObject registList = object.getJSONObject("register");
-                    TextView rankingText = (TextView)findViewById(R.id.reuslt_description);
-                    rankingText.setText( String.valueOf( registList.length() ) + "人中○番目にボタンを押しました");
-
-
-                    // TODO 当人の結果
-                    miResultType = RESULT_WIN;
-
-                    break;
-                }
-            }
+            calcResult( array );
+            startResult();
         } catch (JSONException e) {
             e.printStackTrace();
 
-            for( int i = 0 ; i < 3 ; i++ )
-            {
-                TextView view = (TextView)findViewById(mResultTextIDs[i]);
-                view.setText( "---" );
+            for (int i = 0; i < 3; i++) {
+                TextView view = (TextView) findViewById(mResultTextIDs[i]);
+                view.setText("---");
             }
             // TODO 本当は DRAW
             miResultType = RESULT_DRAW;
-
+            setDraw();
         }
+    }
 
+    private void startResult()
+    {
+        // 描画アニメーション開始
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startAlphaDownAnimation();
+            }
+        }, START_ANIM_DELAY);
 
-        switch (miResultType)
-        {
+        switch (miResultType) {
             case RESULT_WIN:
-                resetStar();
                 setWin();
                 break;
             case RESULT_DRAW:
@@ -725,6 +790,99 @@ public class ResultActivity extends BaseActivity
             case RESULT_LOSE:
                 setLose();
                 break;
+        }
+    }
+
+    private void calcResult( JSONArray array )
+    {
+        if( array == null || array.length() == 0 )
+        {
+            for( int i = 0 ; i < 3 ; i++ )
+            {
+                TextView view = (TextView)findViewById(mResultTextIDs[i]);
+                view.setText( "---" );
+            }
+            miResultType = RESULT_DRAW;
+            return;
+        }
+        else
+        {
+            int iMax = array.length() > 3 ? array.length() - 3 : 0;
+            int iResourceIndex = 0;
+            long lBaseTime = Utility.INVALID_ID;
+            for( int i = array.length() - 1; i >= iMax ; i--, iResourceIndex++ )
+            {
+                TextView name = (TextView)findViewById(mResultTextIDs[iResourceIndex]);
+                TextView time = (TextView)findViewById(mResultTimeIDs[iResourceIndex]);
+
+                try {
+                    JSONObject object = array.getJSONObject(i);
+
+                    if( i == array.length() - 1 )
+                    {
+                        lBaseTime = Long.valueOf(object.getString("datetime"));
+                        time.setText( "00:00:000" );
+                    }
+                    else {
+                        long lTime = Long.valueOf(object.getString("datetime"));
+                        Date date = new Date( lTime - lBaseTime );
+                        SimpleDateFormat format = new SimpleDateFormat("mm:ss:SSS");
+                        time.setText(format.format(date));
+                    }
+
+                    JSONObject ParsonData = object.getJSONObject("subordinate");
+                    String strName = ParsonData.getString("name");
+                    name.setText(strName);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    miResultType = RESULT_DRAW;
+                    return;
+                }
+            }
+
+            //  押した人が 3 人に満たなかった場合用
+            for( int i = iResourceIndex ; i < 3 ; i++ )
+            {
+                TextView view = (TextView)findViewById(mResultTextIDs[i]);
+                view.setText( "---" );
+
+                TextView time = (TextView)findViewById(mResultTimeIDs[i]);
+                time.setText( "--:--:---" );
+            }
+
+
+            miResultType = RESULT_LOSE;
+            int iNumber = Utility.INVALID_ID;
+            // 自分の順位
+            for( int i = array.length() - 1 ; i >= 0 ; i-- )
+            {
+                try {
+                    JSONObject object = array.getJSONObject(i);
+
+                    JSONObject ParsonData = object.getJSONObject("subordinate");
+                    String strCode = ParsonData.getString("code");
+
+                    String strOwnCode = Utility.getSavedStringData(getApplicationContext(), "code");
+                    if( strOwnCode.contentEquals(strCode) )
+                    {
+                        iNumber = array.length() - i;
+                        break;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    miResultType = RESULT_DRAW;
+                    return;
+                }
+            }
+
+            // 1 位のみ勝利にする
+            if( iNumber == 1 )
+            {
+                miResultType = RESULT_WIN;
+            }
+
+            TextView rankingText = (TextView)findViewById(R.id.reuslt_description);
+            rankingText.setText( String.valueOf( array.length() ) + "人中" + String.valueOf(iNumber) + "番目にボタンを押しました");
         }
     }
 }

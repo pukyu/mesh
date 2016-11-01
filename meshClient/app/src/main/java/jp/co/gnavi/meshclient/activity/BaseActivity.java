@@ -147,11 +147,13 @@ public class BaseActivity extends Activity {
             }
         }, ARROW_DELAY*2 );
 
+/*
         View lineViewLeft = (View)findViewById(R.id.line_view_left);
         setRoopLineAlphaAnimation(lineViewLeft, ALPHA_DOWN_ANIM);
 
         View lineViewRight = (View)findViewById(R.id.line_view_right);
         setRoopLineAlphaAnimation(lineViewRight, ALPHA_DOWN_ANIM);
+*/
     }
 
     protected static final int ALPHA_DOWN_ANIM = 0;

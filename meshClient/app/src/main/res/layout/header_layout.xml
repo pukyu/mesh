@@ -12,7 +12,7 @@
 
         <FrameLayout
             android:layout_centerInParent="false"
-            android:background="@color/themeColor"
+            android:background="@color/themeColorNonAlpha"
             android:layout_height="1dp"
             android:id="@+id/line_view_left"
             android:layout_centerHorizontal="false"
@@ -25,7 +25,7 @@
 
         <FrameLayout
             android:layout_centerInParent="false"
-            android:background="@color/themeColor"
+            android:background="@color/themeColorNonAlpha"
             android:layout_height="1dp"
             android:id="@+id/line_view_right"
             android:layout_centerHorizontal="false"

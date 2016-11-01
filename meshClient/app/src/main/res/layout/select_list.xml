@@ -32,7 +32,7 @@
         android:layout_marginTop="-35dp"/>
 
     <TextView
-        android:text="now loading..."
+        android:text="@string/loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/now_loading"

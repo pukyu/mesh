@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -25,6 +26,8 @@ public class Utility {
     // todo:他の MESH 端末も同じ数値かチェック（数値の意味チェック）
     private final static String MESH_NAME = "MESH-100BU1001883";
 
+    private final static String SharedPreferenceName = "MashUpApp";
+
     /**
      * 初期化
      */
@@ -32,6 +35,37 @@ public class Utility {
         // コンストラクタでやらせたら、準備が間に合わず null が確実に来たので。。。
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     }
+
+    public static final void saveStringData( Context context, String strKey, String strData )
+    {
+        SharedPreferences data = context.getSharedPreferences(SharedPreferenceName, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = data.edit();
+
+        editor.putString(strKey, strData);
+        editor.apply();
+    }
+
+    public static final String getSavedStringData( Context context, String strKey )
+    {
+        SharedPreferences data = context.getSharedPreferences(SharedPreferenceName, Context.MODE_PRIVATE);
+        return data.getString(strKey, "");
+    }
+
+    public static final void saveIntData( Context context, String strKey, int iValue )
+    {
+        SharedPreferences data = context.getSharedPreferences(SharedPreferenceName, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = data.edit();
+
+        editor.putInt(strKey, iValue);
+        editor.apply();
+    }
+
+    public static final int getSavedIntData( Context context, String strKey )
+    {
+        SharedPreferences data = context.getSharedPreferences(SharedPreferenceName, Context.MODE_PRIVATE);
+        return data.getInt(strKey, INVALID_ID);
+    }
+
 
     /**
      * ログ出力

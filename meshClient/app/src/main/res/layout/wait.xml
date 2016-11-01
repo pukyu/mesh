@@ -24,7 +24,7 @@
         android:cropToPadding="false"
         android:layout_alignParentTop="false"
         android:adjustViewBounds="true"
-        android:padding="60dp"
+        android:padding="72dp"
         android:layout_centerInParent="true"
         android:layout_alignTop="@+id/user_layout"
         android:layout_alignBottom="@+id/user_layout"
@@ -42,8 +42,9 @@
         <RelativeLayout
             android:layout_centerInParent="true"
             android:id="@+id/anim_layout"
-            android:layout_width="250dp"
-            android:layout_height="250dp">
+            android:layout_width="210dp"
+            android:layout_height="210dp"
+            >
 
             <ImageView
                 android:layout_width="match_parent"
@@ -71,7 +72,7 @@
                 android:id="@+id/circle_2"
                 android:layout_centerInParent="true"
                 android:adjustViewBounds="true"
-                android:layout_margin="45dp" />
+                android:layout_margin="35dp"/>
 
             <ImageView
                 android:src="@drawable/user_def"
@@ -81,8 +82,8 @@
                 android:layout_centerInParent="true"
                 android:adjustViewBounds="true"
                 android:cropToPadding="false"
-                android:layout_width="120dp"
-                android:layout_height="120dp"/>
+                android:layout_width="100dp"
+                android:layout_height="100dp"/>
         </RelativeLayout>
 
     </RelativeLayout>
@@ -112,10 +113,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/state_sub_text"
-                android:layout_centerHorizontal="true"
                 android:textColor="@color/yellow"
-                android:layout_alignParentBottom="true"
-                android:textSize="20dp"/>
+                android:textSize="18dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="30dp"/>
         </RelativeLayout>
 
         <TextView
@@ -233,7 +234,7 @@
                 android:layout_centerHorizontal="true">
 
                 <TextView
-                    android:text="Target"
+                    android:text="@string/target_string"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/target_title"
@@ -276,7 +277,7 @@
                 android:layout_marginTop="12dp">
 
                 <TextView
-                    android:text="Information"
+                    android:text="@string/information_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/infor_title"
@@ -314,7 +315,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         layout="@layout/color_overlay"
-        />
+        android:visibility="gone"
+        android:id="@+id/overlay_layout"/>
 
 
 </RelativeLayout>

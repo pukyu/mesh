@@ -38,8 +38,7 @@
             android:id="@+id/result_infor_title"
             android:textColor="@color/winYellow"
             android:layout_centerHorizontal="true"
-            android:textSize="15dp"
-            />
+            android:textSize="12dp"/>
 
         <TextView
             android:text="３名中１番目にボタンを押しました"
@@ -49,17 +48,17 @@
             android:textColor="@color/white"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/result_infor_title"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="6dp"
             android:textSize="15dp"/>
 
         <RelativeLayout
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/result_data"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/reuslt_description"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="10dp">
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="12dp"
+            android:layout_width="180dp">
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -72,7 +71,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/text_1st"
                     android:textColor="@color/winYellow"
-                    android:textSize="15dp"/>
+                    android:textSize="12dp"/>
 
                 <TextView
                     android:text="山田 太郎"
@@ -82,14 +81,26 @@
                     android:textColor="@color/white"
                     android:layout_toRightOf="@+id/text_1st"
                     android:layout_marginLeft="20dp"
-                    android:textSize="15dp"/>
+                    android:textSize="12dp"/>
+
+                <TextView
+                    android:text="00:00:00"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/time_1st"
+                    android:layout_toRightOf="@+id/name_1st"
+                    android:textColor="@color/white"
+                    android:textSize="12dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="wrap_content"
+                    android:textAlignment="viewEnd"/>
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/layout_2nd"
-                android:layout_below="@+id/layout_1st">
+                android:layout_below="@+id/layout_1st"
+                android:layout_marginTop="9dp">
 
                 <TextView
                     android:text="2"
@@ -97,7 +108,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/text_2nd"
                     android:textColor="@color/winYellow"
-                    android:textSize="15dp"/>
+                    android:textSize="12dp"/>
 
                 <TextView
                     android:text="ぐる ナビ子"
@@ -107,14 +118,26 @@
                     android:layout_toRightOf="@+id/text_2nd"
                     android:textColor="@color/white"
                     android:layout_marginLeft="20dp"
-                    android:textSize="15dp"/>
+                    android:textSize="12dp"/>
+
+                <TextView
+                    android:text="00:00:00"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/time_2nd"
+                    android:layout_toRightOf="@+id/name_2nd"
+                    android:textColor="@color/white"
+                    android:textSize="12dp"
+                    android:layout_alignParentRight="true"
+                    android:textAlignment="viewEnd"/>
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/layout_3rd"
-                android:layout_below="@+id/layout_2nd">
+                android:layout_below="@+id/layout_2nd"
+                android:layout_marginTop="9dp">
 
                 <TextView
                     android:text="3"
@@ -122,7 +145,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/text_3rd"
                     android:textColor="@color/winYellow"
-                    android:textSize="15dp"/>
+                    android:textSize="12dp"/>
 
                 <TextView
                     android:text="山田 花子"
@@ -132,7 +155,18 @@
                     android:layout_marginLeft="20dp"
                     android:layout_toRightOf="@+id/text_3rd"
                     android:textColor="@color/white"
-                    android:textSize="15dp"/>
+                    android:textSize="12dp"/>
+
+                <TextView
+                    android:text="00:00:00"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/time_3rd"
+                    android:layout_toRightOf="@+id/name_3rd"
+                    android:textColor="@color/white"
+                    android:textSize="12dp"
+                    android:layout_alignParentRight="true"
+                    android:textAlignment="viewEnd"/>
             </RelativeLayout>
 
         </RelativeLayout>
@@ -164,8 +198,8 @@
             android:layout_height="250dp">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="17dp"
+                android:layout_height="17dp"
                 android:src="@drawable/kira_s"
                 android:id="@+id/star_s_right"
                 android:layout_alignParentRight="true"
@@ -173,8 +207,8 @@
                 android:layout_marginTop="94dp"/>
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="17dp"
+                android:layout_height="17dp"
                 android:src="@drawable/kira_s"
                 android:id="@+id/star_s_bottom_right"
                 android:layout_alignParentBottom="true"
@@ -183,8 +217,8 @@
                 android:layout_marginRight="50dp"/>
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="17dp"
+                android:layout_height="17dp"
                 android:src="@drawable/kira_s"
                 android:id="@+id/star_s_bottom"
                 android:layout_alignParentBottom="true"
@@ -193,8 +227,8 @@
                 android:layout_marginRight="100dp"/>
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="17dp"
+                android:layout_height="17dp"
                 android:src="@drawable/kira_s"
                 android:id="@+id/star_s_bottom_left"
                 android:layout_alignParentBottom="true"
@@ -202,41 +236,41 @@
                 android:layout_marginLeft="75dp"/>
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:src="@drawable/kira_m"
                 android:id="@+id/star_s_left"
                 android:layout_marginTop="153dp"
                 android:layout_marginLeft="20dp"/>
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="17dp"
+                android:layout_height="17dp"
                 android:src="@drawable/kira_s"
                 android:id="@+id/star_s_top_left"
                 android:layout_marginTop="42dp"
                 android:layout_marginLeft="38dp"/>
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="17dp"
                 android:src="@drawable/kira_s"
                 android:id="@+id/star_s_top"
                 android:layout_marginLeft="168dp"
-                android:layout_marginTop="19dp"/>
+                android:layout_marginTop="19dp"
+                android:layout_width="17dp"/>
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="24dp"
                 android:src="@drawable/kira_m"
                 android:id="@+id/star_m_bottom"
                 android:layout_alignParentBottom="true"
                 android:layout_marginLeft="141dp"
-                android:layout_marginBottom="2dp"/>
+                android:layout_marginBottom="2dp"
+                android:layout_width="24dp"/>
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:src="@drawable/kira_m"
                 android:id="@+id/star_m_right"
                 android:layout_alignParentRight="true"
@@ -244,8 +278,8 @@
                 android:layout_marginTop="35dp"/>
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:src="@drawable/kira_l"
                 android:id="@+id/star_l_right"
                 android:layout_alignParentBottom="true"
@@ -254,20 +288,19 @@
                 android:layout_marginRight="6dp"/>
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:src="@drawable/kira_l"
                 android:id="@+id/star_l_left"
                 android:layout_marginTop="95dp"
                 android:layout_marginLeft="5dp"/>
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="35dp"
                 android:src="@drawable/kira_l"
                 android:id="@+id/star_l_top"
                 android:layout_marginLeft="119dp"
-                />
+                android:layout_width="35dp"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -288,15 +321,16 @@
 
             <Button
                 android:text="CONTINUE"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:id="@+id/btn_continue"
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentBottom="false"
                 android:layout_below="@+id/main_image"
                 android:background="@drawable/round_corner_selector"
-                android:layout_width="200dp"
-                android:visibility="gone"
-                android:layout_marginTop="30dp"/>
+                android:layout_marginTop="13dp"
+                android:textSize="18dp"
+                android:layout_width="240dp"
+                android:visibility="gone"/>
         </RelativeLayout>
 
     </RelativeLayout>
