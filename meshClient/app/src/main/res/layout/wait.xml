@@ -318,5 +318,12 @@
         android:visibility="gone"
         android:id="@+id/overlay_layout"/>
 
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/error_layout"
+        android:id="@+id/error_root"
+        android:visibility="gone"/>
+
 
 </RelativeLayout>

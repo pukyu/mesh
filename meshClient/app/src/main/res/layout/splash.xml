@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/black">
+                android:background="@color/black"
+    >
 
     <ImageView
         android:layout_width="match_parent"
@@ -31,45 +32,54 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/user_layout"
-        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="85dp"
+        android:background="@drawable/text_frame"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="100dp">
+        android:layout_centerHorizontal="true">
 
-        <TextView
-            android:text="CODE:"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView"
-            android:textColor="@color/white"
-            android:textSize="12dp"
-            android:layout_centerVertical="true"/>
+        <ImageView
+            android:src="@drawable/gu_y_r"
+            android:id="@+id/send_img"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@+id/code_box"
+            android:layout_alignTop="@+id/code_box"
+            android:layout_alignBottom="@+id/code_box"
+            android:layout_centerInParent="false"
+            android:layout_centerHorizontal="false"
+            android:paddingTop="12dp"
+            android:layout_width="match_parent"
+            android:paddingBottom="12dp"
+            android:paddingRight="10dp"/>
 
         <EditText
             android:layout_width="wrap_content"
             android:inputType="textEmailAddress"
             android:ems="12"
             android:id="@+id/code_box"
-            android:layout_toRightOf="@+id/textView"
             android:textColor="@color/white"
-            android:textSize="12dp"
-            android:layout_marginLeft="5dp"
-            android:background="@drawable/text_frame"
             android:layout_centerVertical="true"
             android:singleLine="true"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:layout_height="30dp"/>
-
-        <Button
-            android:text="SEND"
-            android:id="@+id/btn_send"
-            android:layout_toRightOf="@+id/code_box"
-            android:background="@drawable/round_corner_selector"
-            android:layout_width="60dp"
-            android:layout_height="24dp"
-            android:layout_marginLeft="20dp"
-            android:layout_centerVertical="true"/>
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textCursorDrawable="@color/white"
+            android:hint="STAFF NAME"
+            android:textColorHint="@color/lightGray"
+            android:layout_height="45dp"
+            android:textSize="15dp"
+            android:autoLink="none"
+            android:background="@drawable/clear_frame"/>
 
     </RelativeLayout>
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/error_layout"
+        android:visibility="gone"
+        android:id="@+id/error_root"/>
 
 </RelativeLayout>

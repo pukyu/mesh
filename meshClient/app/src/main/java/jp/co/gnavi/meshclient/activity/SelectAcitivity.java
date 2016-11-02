@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import jp.co.gnavi.lib.common.GNDefine;
 import jp.co.gnavi.lib.connection.GNCustomUrlConnection;
 import jp.co.gnavi.lib.connection.GNCustomUrlReturnObject;
+import jp.co.gnavi.lib.utility.GNUtility;
 import jp.co.gnavi.meshclient.R;
 import jp.co.gnavi.meshclient.adpter.SelectListAdapter;
 import jp.co.gnavi.meshclient.common.Define;
@@ -132,6 +133,13 @@ public class SelectAcitivity extends BaseActivity
 
     private void load()
     {
+        if( !GNUtility.isConnection( getApplicationContext() ) )
+        {
+            drawError(getResources().getString(R.string.alart_title), getResources().getString(R.string.network_error));
+            return;
+        }
+
+
         final ListView selectList = (ListView)findViewById(R.id.select_list);
         selectList.setVisibility(View.INVISIBLE);
 
@@ -160,6 +168,7 @@ public class SelectAcitivity extends BaseActivity
 
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    drawError(getResources().getString(R.string.alart_title), getResources().getString(R.string.network_error));
                 }
             }
         };
@@ -196,6 +205,7 @@ public class SelectAcitivity extends BaseActivity
 
             } catch (JSONException e) {
                 e.printStackTrace();
+                drawError(getResources().getString(R.string.alart_title), getResources().getString(R.string.data_error));
             }
 
         }

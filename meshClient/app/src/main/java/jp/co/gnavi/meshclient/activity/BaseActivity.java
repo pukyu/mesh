@@ -13,6 +13,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -24,6 +25,7 @@ import java.nio.charset.Charset;
 import jp.co.gnavi.lib.common.GNDefine;
 import jp.co.gnavi.lib.connection.GNCustomUrlConnection;
 import jp.co.gnavi.lib.connection.GNCustomUrlReturnObject;
+import jp.co.gnavi.lib.utility.GNUtility;
 import jp.co.gnavi.meshclient.R;
 import jp.co.gnavi.meshclient.common.Define;
 import jp.co.gnavi.meshclient.common.Utility;
@@ -44,6 +46,12 @@ public class BaseActivity extends Activity {
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        View errorLayout = (View)findViewById(R.id.error_root);
+        if( errorLayout != null )
+        {
+            errorLayout.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -289,6 +297,12 @@ public class BaseActivity extends Activity {
 
     protected void getBossInformation( final String strBossID )
     {
+        if( !GNUtility.isConnection( getApplicationContext() ) )
+        {
+            drawError(getResources().getString(R.string.alart_title), getResources().getString(R.string.network_error));
+            return;
+        }
+
         Handler handler = new Handler() {
             public void handleMessage(Message msg) {
                 callbackBossInformation( msg );
@@ -304,4 +318,43 @@ public class BaseActivity extends Activity {
     protected void callbackBossInformation( Message msg )
     {
     }
+
+    private static final int ERROR_ANIM_DURATION = 2000;
+    protected Boolean drawError( String strTitle, String strDetail )
+    {
+        final RelativeLayout errorLayout = (RelativeLayout)findViewById(R.id.error_root);
+        final View animView = (View)findViewById(R.id.error_color_view);
+
+        if( errorLayout == null )
+        {
+            return false;
+        }
+
+        TextView    errorTitle = (TextView)findViewById(R.id.error_title);
+        errorTitle.setText(strTitle);
+
+        TextView    detailText = (TextView)findViewById(R.id.error_detail);
+        detailText.setText(strDetail);
+
+
+        errorLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                errorLayout.setVisibility(View.GONE);
+                animView.clearAnimation();
+            }
+        });
+
+        animView.clearAnimation();
+        AlphaAnimation alpha = new AlphaAnimation(1.0f, 0.0f);
+        alpha.setDuration(ERROR_ANIM_DURATION);
+        alpha.setInterpolator(new LinearInterpolator());
+        alpha.setRepeatCount(-1);
+        animView.setAnimation(alpha);
+
+        errorLayout.setVisibility(View.VISIBLE);
+
+        return true;
+    }
+
 }

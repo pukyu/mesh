@@ -22,4 +22,7 @@
     <color name="listLine">#009999</color>
     <color name="selectColor">#6600ffff</color>
     <color name="green">#cc00FF00</color>
+    <color name="lightGray">#505050</color>
+    <color name="errorColor">#99FF0000</color>
+    <color name="red">#FF0000</color>
 </resources>

@@ -140,13 +140,7 @@ public class ResultActivity extends BaseActivity
 
         setCommon();
 
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getBossInformation( mTargetData.getListNo() );
-            }
-        }, 1000);
+        getBossInformation( mTargetData.getListNo() );
     }
 
     private static final int START_ANIM_DELAY = 3000;

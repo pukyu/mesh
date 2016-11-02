@@ -9,4 +9,9 @@
     <string name="result_dummy">１　　　山田　太郎　\n
 ２　　　ぐる　なび子\n
 ３　　　山田　花子　</string>
+    <string name="alart_title">警告</string>
+    <string name="atension_title">注意</string>
+    <string name="network_error">回線接続異常発生!!</string>
+    <string name="code_error">不正侵入者確認!!</string>
+    <string name="data_error">異常受信発生!!</string>
 </resources>

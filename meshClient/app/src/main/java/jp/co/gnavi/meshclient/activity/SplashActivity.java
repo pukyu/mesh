@@ -4,11 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,7 +37,7 @@ import jp.co.gnavi.meshclient.data.UserData;
 /**
  * Created by kaifuku on 2016/10/05.
  */
-public class SplashActivity extends BaseActivity {
+public class SplashActivity extends BaseActivity implements TextWatcher{
 
     private ArrayList<UserData> mUserDataList = new ArrayList<>();
 
@@ -86,8 +89,8 @@ public class SplashActivity extends BaseActivity {
         RelativeLayout userLayout = (RelativeLayout)findViewById(R.id.user_layout);
         userLayout.setVisibility(View.INVISIBLE);
 
-        Button btnSend = (Button)findViewById(R.id.btn_send);
-        btnSend.setOnClickListener(new View.OnClickListener() {
+        ImageView sendImage = (ImageView)findViewById(R.id.send_img);
+        sendImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 EditText editText = (EditText)findViewById(R.id.code_box);
@@ -98,14 +101,16 @@ public class SplashActivity extends BaseActivity {
                 }
                 else
                 {
-                    Toast.makeText(SplashActivity.this, "NOT ACCEPT!!", Toast.LENGTH_SHORT).show();
+                    drawError(getResources().getString(R.string.alart_title), getResources().getString(R.string.code_error));
                 }
             }
         });
+        sendImage.setVisibility(View.INVISIBLE);
 
+        EditText editText = (EditText)findViewById(R.id.code_box);
+        editText.addTextChangedListener(this);
 
         loadUsers();
-
 /*
         Runnable runnable = new Runnable() {
             @Override
@@ -130,6 +135,12 @@ public class SplashActivity extends BaseActivity {
 
     private void loadUsers()
     {
+        if( !GNUtility.isConnection( getApplicationContext() ) )
+        {
+            drawError(getResources().getString(R.string.alart_title), getResources().getString(R.string.network_error));
+            return;
+        }
+
         Handler handler = new Handler() {
             public void handleMessage(Message msg) {
 
@@ -175,12 +186,11 @@ public class SplashActivity extends BaseActivity {
                     {
                         RelativeLayout userLayout = (RelativeLayout)findViewById(R.id.user_layout);
                         userLayout.setVisibility(View.VISIBLE);
-
-                        Toast.makeText(SplashActivity.this, "INPUT YOUR CODE!!", Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    drawError(getResources().getString(R.string.alart_title), getResources().getString(R.string.data_error));
                 }
             }
         };
@@ -192,13 +202,6 @@ public class SplashActivity extends BaseActivity {
 
     private Boolean checkUser( String strUser )
     {
-/*
-        if( strUser.contentEquals("kaifuku") )
-        {
-            Utility.saveStringData(getApplicationContext(), "code", strUser);
-            return true;
-        }
-*/
         if( strUser == null || strUser.length() == 0 )
         {
             return false;
@@ -221,4 +224,26 @@ public class SplashActivity extends BaseActivity {
         return false;
     }
 
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        ImageView sendImage = (ImageView)findViewById(R.id.send_img);
+        if( s.length() == 0 )
+        {
+            sendImage.setVisibility(View.INVISIBLE);
+        }
+        else
+        {
+            sendImage.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+
+    }
 }

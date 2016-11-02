@@ -42,6 +42,7 @@ import java.util.TimeZone;
 import jp.co.gnavi.lib.common.GNDefine;
 import jp.co.gnavi.lib.connection.GNCustomUrlConnection;
 import jp.co.gnavi.lib.connection.GNCustomUrlReturnObject;
+import jp.co.gnavi.lib.utility.GNUtility;
 import jp.co.gnavi.meshclient.R;
 import jp.co.gnavi.meshclient.common.Define;
 import jp.co.gnavi.meshclient.common.Utility;
@@ -154,6 +155,9 @@ public class WaitActivity extends BaseActivity {
         changeStateWait();
 
         makeConnection();
+
+        TextView inforTitle = (TextView)findViewById(R.id.infor_text);
+        inforTitle.setVisibility(View.INVISIBLE);
 
         final ImageView circle4 = (ImageView)findViewById(R.id.circle_4);
         final ViewTreeObserver observer4 = circle4.getViewTreeObserver();
@@ -805,8 +809,15 @@ public class WaitActivity extends BaseActivity {
         subTitleText.setTextColor(iSubTitleColor);
     }
 
+    private static final int GO_TO_RESULT_DELAY = 2000;
     private void makeConnection()
     {
+        if( !GNUtility.isConnection( getApplicationContext() ) )
+        {
+            drawError(getResources().getString(R.string.alart_title), getResources().getString(R.string.network_error));
+            return;
+        }
+
         milkCocoa = new MilkCocoa("guitariu6e7lgx.mlkcca.com");
         dataStore = milkCocoa.dataStore("messages");
         dataStore.addDataStoreEventListener(new DataStoreEventListener() {
@@ -885,7 +896,7 @@ public class WaitActivity extends BaseActivity {
                 }
                 else if ("result".equals(type)) {
                     // finish が終了した（finish 5 秒後）
-                    mHandler.post(new Runnable() {
+                    mHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             String result = data.getValue("result");
@@ -902,7 +913,7 @@ public class WaitActivity extends BaseActivity {
                             miDrawTime = 0;
                             dataStore.removeDataStoreEventListener();
                         }
-                    });
+                    }, GO_TO_RESULT_DELAY);
                 }
 
             }
@@ -933,6 +944,13 @@ public class WaitActivity extends BaseActivity {
 
     private void sendRegist()
     {
+        if( !GNUtility.isConnection( getApplicationContext() ) )
+        {
+            drawError(getResources().getString(R.string.alart_title), getResources().getString(R.string.network_error));
+            return;
+        }
+
+
         Handler handler = new Handler() {
             public void handleMessage(Message msg) {
                 if (msg == null || msg.obj == null) {
@@ -956,10 +974,12 @@ public class WaitActivity extends BaseActivity {
 
                     TextView inforTitle = (TextView)findViewById(R.id.infor_text);
                     inforTitle.setText("他部下" + String.valueOf(iCount) + "名待機中...");
+                    inforTitle.setVisibility(View.VISIBLE);
 
                     Utility.customLog("WAIT", "regist:?" +  "boss id:" + mTargetData.getListNo(), Log.DEBUG);
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    drawError(getResources().getString(R.string.alart_title), getResources().getString(R.string.data_error));
                 }
             }
         };
@@ -1031,6 +1051,7 @@ public class WaitActivity extends BaseActivity {
 
             TextView inforTitle = (TextView)findViewById(R.id.infor_text);
             inforTitle.setText("他部下" + String.valueOf(iCount) + "名待機中...");
+            inforTitle.setVisibility(View.VISIBLE);
 
         } catch (JSONException e) {
             e.printStackTrace();

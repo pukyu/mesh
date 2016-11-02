@@ -51,4 +51,11 @@
         android:layout_below="@+id/sub_title"
         android:layout_marginTop="25dp"
         />
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/error_layout"
+        android:visibility="gone"
+        android:id="@+id/error_root"/>
 </RelativeLayout>
