@@ -195,11 +195,28 @@ public class SelectAcitivity extends BaseActivity
                 String strName = object.getString("name");
                 String strTeam = object.getString("organization");
                 String strTime = object.getString("start_datetime");
+                String strIconUrl = object.getString("icon");
 
                 listData.setListNo(strNumber);
                 listData.setTeam(strTeam);
                 listData.setTargetName(strName);
                 listData.setStartTime(strTime);
+
+                if( strIconUrl == null || strIconUrl.equals("null") )
+                {
+                    if( strNumber.contentEquals("1") )
+                    {
+                        listData.setIconResourceId(R.drawable.matsumura);
+                    }
+                    else if( strNumber.contentEquals("2") )
+                    {
+                        listData.setIconResourceId(R.drawable.seki);
+                    }
+                }
+                else
+                {
+                    listData.setIconImageUrl(strIconUrl);
+                }
 
                 mTargetData.add(listData);
 

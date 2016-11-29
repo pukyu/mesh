@@ -147,6 +147,7 @@ public class SplashActivity extends BaseActivity implements TextWatcher{
                 mUserDataList.clear();
 
                 if (msg == null || msg.obj == null) {
+                    drawError(getResources().getString(R.string.alart_title), getResources().getString(R.string.network_error));
                     return;
                 }
 
@@ -155,6 +156,7 @@ public class SplashActivity extends BaseActivity implements TextWatcher{
 
                 if( ret == null )
                 {
+                    drawError(getResources().getString(R.string.alart_title), getResources().getString(R.string.network_error));
                     return;
                 }
 

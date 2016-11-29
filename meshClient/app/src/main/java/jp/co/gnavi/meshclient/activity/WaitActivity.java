@@ -42,6 +42,7 @@ import java.util.TimeZone;
 import jp.co.gnavi.lib.common.GNDefine;
 import jp.co.gnavi.lib.connection.GNCustomUrlConnection;
 import jp.co.gnavi.lib.connection.GNCustomUrlReturnObject;
+import jp.co.gnavi.lib.connection.GNImageLoad;
 import jp.co.gnavi.lib.utility.GNUtility;
 import jp.co.gnavi.meshclient.R;
 import jp.co.gnavi.meshclient.common.Define;
@@ -209,16 +210,6 @@ public class WaitActivity extends BaseActivity {
             }
         });
 
-        ImageView iconImage = (ImageView)findViewById(R.id.user_icon);
-/*
-        iconImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                playSound( miSoundId );
-                changeStateReady();
-            }
-        });
-*/
         ImageView backSelectImage = (ImageView)findViewById(R.id.reselect);
         backSelectImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -233,15 +224,34 @@ public class WaitActivity extends BaseActivity {
         });
 
 
-        ImageView targetIcon = (ImageView)findViewById(R.id.user_icon);
-        if( mTargetData.getIconResourceId() != Utility.INVALID_ID )
+        final ImageView targetIcon = (ImageView)findViewById(R.id.user_icon);
+        if( mTargetData.getIconImageUrl() != null )
         {
-            targetIcon.setImageResource(mTargetData.getIconResourceId());
+            Handler handler = new Handler()
+            {
+                public void handleMessage(Message msg) {
+                    targetIcon.setVisibility(View.VISIBLE);
+                }
+            };
+            targetIcon.setVisibility(View.INVISIBLE);
+
+            GNImageLoad imgLoad = new GNImageLoad(handler, mTargetData.getIconImageUrl(), targetIcon, GNDefine.CONNECTION_GET, null, null, null, getApplicationContext());
+            imgLoad.start();
         }
         else
         {
-            targetIcon.setImageResource(R.drawable.user_def);
+            if( mTargetData.getIconResourceId() != Utility.INVALID_ID )
+            {
+                targetIcon.setImageResource(mTargetData.getIconResourceId());
+            }
+            else
+            {
+                targetIcon.setImageResource(R.drawable.user_def);
+            }
+
+            targetIcon.setVisibility(View.VISIBLE);
         }
+
         TextView group = (TextView)findViewById(R.id.group_name);
         group.setText(mTargetData.getTeam());
 
@@ -257,7 +267,7 @@ public class WaitActivity extends BaseActivity {
         if( mTargetData.getStartTime() != null )
         {
             try{
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
                 format.setTimeZone(TimeZone.getTimeZone("UTC"));
                 Calendar startTime = Calendar.getInstance();
                 Date startDate = new Date( format.parse(mTargetData.getStartTime()).getTime() );
@@ -488,7 +498,7 @@ public class WaitActivity extends BaseActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                setCircleColorFilter(getResources().getColor(R.color.green));
+                setCircleColorFilter(getResources().getColor(R.color.red));
                 setOpenRotateAnimation(circle4, 0.0f, 360.0f, iPoint4, iPoint4, OPEN_ANIM_DURATION, CIRCLE4_ANIMATE_DURATION / 4 );
             }
         }, CLOSE_ANIM_DURATION - 200 );
@@ -902,10 +912,25 @@ public class WaitActivity extends BaseActivity {
                             String result = data.getValue("result");
                             Utility.customLog("push", "result " + id, Log.DEBUG);
 
+                            Long  lStartBaseTime = 0L;
+                            try {
+                                String strTime = data.getValue("datetime");
+                                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                                format.setTimeZone(TimeZone.getTimeZone("UTC"));
+                                Calendar startTime = Calendar.getInstance();
+                                Date startDate = null;
+                                startDate = new Date( format.parse(strTime).getTime() );
+                                startTime.setTime(startDate);
+                                lStartBaseTime = startTime.getTimeInMillis() + 15000;
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
                             Intent intent = new Intent( getApplicationContext(), ResultActivity.class );
                             intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP );
                             intent.putExtra("target", mTargetData);
                             intent.putExtra("result", result.substring(1, result.length()-1) );
+                            intent.putExtra("start_time", lStartBaseTime);
                             startActivity( intent );
                             overridePendingTransition(0, 0);
 

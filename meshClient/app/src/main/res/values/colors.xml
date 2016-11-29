@@ -25,4 +25,5 @@
     <color name="lightGray">#505050</color>
     <color name="errorColor">#99FF0000</color>
     <color name="red">#FF0000</color>
+    <color name="alphaRed">#ccFF0000</color>
 </resources>

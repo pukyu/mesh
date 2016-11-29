@@ -30,7 +30,7 @@ android {
     productFlavors {
         dev {
  //           applicationId "${PACKAGE_NAME}"
-            manifestPlaceholders = [appName: "D上司争奪戦"];
+            manifestPlaceholders = [appName: "上司争奪戦"];
         }
         rel {
  //           applicationId "${PACKAGE_NAME}"

@@ -52,6 +52,12 @@ public class SelectListData implements Serializable
 
     public void setIconImageUrl( String strImageUrl )
     {
+        if( strImageUrl == null || strImageUrl.equals("null") )
+        {
+            mstrIconImageUrl = null;
+            return;
+        }
+
         mstrIconImageUrl = strImageUrl;
     }
 
@@ -73,12 +79,21 @@ public class SelectListData implements Serializable
 
     public void setStartTime( String strDate )
     {
-        if( strDate.equals("null") )
+        if( strDate.equals("null") || strDate.length() == 0 )
         {
             mstrStartTime = null;
             return;
         }
-        mstrStartTime = strDate;
+
+        if( strDate.length() > 20 )
+        {
+            String strTmp = strDate.substring(0, 19);
+            mstrStartTime = strTmp + "Z";
+        }
+        else
+        {
+            mstrStartTime = strDate;
+        }
     }
 
     public String getStartTime()

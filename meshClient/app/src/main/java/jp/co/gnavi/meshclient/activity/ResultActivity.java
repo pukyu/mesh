@@ -56,6 +56,8 @@ public class ResultActivity extends BaseActivity
 
     private SelectListData mTargetData;
 
+    private Long    mBaseTime;
+
     @Override
     public boolean dispatchKeyEvent(KeyEvent e) {
         // 戻るボタンが押されたとき
@@ -75,6 +77,7 @@ public class ResultActivity extends BaseActivity
         Intent intent = getIntent();
         mTargetData = (SelectListData) intent.getSerializableExtra("target");
         String strResult = intent.getStringExtra("result");
+        mBaseTime = intent.getLongExtra("start_time", 0L);
 
         initalize();
 //        calcResult( strResult );
@@ -811,7 +814,7 @@ public class ResultActivity extends BaseActivity
 
                 try {
                     JSONObject object = array.getJSONObject(i);
-
+/*
                     if( i == array.length() - 1 )
                     {
                         lBaseTime = Long.valueOf(object.getString("datetime"));
@@ -822,6 +825,27 @@ public class ResultActivity extends BaseActivity
                         Date date = new Date( lTime - lBaseTime );
                         SimpleDateFormat format = new SimpleDateFormat("mm:ss:SSS");
                         time.setText(format.format(date));
+                    }
+*/
+                    if( mBaseTime == 0L )
+                    {
+                        mBaseTime = Long.valueOf(object.getString("datetime"));
+                        time.setText( "00:00:000" );
+                    }
+                    else
+                    {
+                        long lTime = Long.valueOf(object.getString("datetime"));
+
+                        // フライングが起きる可能性有
+                        if( mBaseTime - lTime > 0 )
+                        {
+                            time.setText( "00:00:000" );
+                        }
+                        else {
+                            Date date = new Date( lTime - mBaseTime );
+                            SimpleDateFormat format = new SimpleDateFormat("mm:ss:SSS");
+                            time.setText(format.format(date));
+                        }
                     }
 
                     JSONObject ParsonData = object.getJSONObject("subordinate");

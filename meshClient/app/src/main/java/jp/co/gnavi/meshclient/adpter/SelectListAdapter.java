@@ -1,6 +1,8 @@
 package jp.co.gnavi.meshclient.adpter;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import jp.co.gnavi.lib.common.GNDefine;
+import jp.co.gnavi.lib.connection.GNImageLoad;
 import jp.co.gnavi.meshclient.R;
 import jp.co.gnavi.meshclient.common.Utility;
 import jp.co.gnavi.meshclient.data.SelectListData;
@@ -19,11 +23,13 @@ import jp.co.gnavi.meshclient.data.SelectListData;
  */
 
 public class SelectListAdapter extends ArrayAdapter<SelectListData> {
-    LayoutInflater mLayoutInflater = null;
+    LayoutInflater  mLayoutInflater = null;
+    Context         mContext;
 
     public SelectListAdapter(Context context) {
         super(context, 0);
         mLayoutInflater = LayoutInflater.from(context);
+        mContext = context;
     }
 
     @Override
@@ -45,18 +51,38 @@ public class SelectListAdapter extends ArrayAdapter<SelectListData> {
             topLineView.setVisibility(View.GONE);
         }
 
-
-        ImageView   iconImage = (ImageView)convertView.findViewById(R.id.target_icon);
-//        if( data.getIconImageUrl() == null )
-        if( data.getIconResourceId() == Utility.INVALID_ID )
+        final ImageView   iconFrame = (ImageView)convertView.findViewById(R.id.icon_frame);
+        final ImageView   iconImage = (ImageView)convertView.findViewById(R.id.target_icon);
+        if( data.getIconImageUrl() != null )
         {
-            iconImage.setImageResource(R.drawable.user_def);
+            Handler handler = new Handler()
+            {
+                public void handleMessage(Message msg) {
+                    iconImage.setVisibility(View.VISIBLE);
+                    iconFrame.setVisibility(View.VISIBLE);
+                }
+            };
+            iconImage.setVisibility(View.INVISIBLE);
+            iconFrame.setVisibility(View.INVISIBLE);
+
+            GNImageLoad imgLoad = new GNImageLoad(handler, data.getIconImageUrl(), iconImage, GNDefine.CONNECTION_GET, null, null, null, mContext);
+            imgLoad.start();
         }
         else
         {
-            // TODO:ロード？
-            iconImage.setImageResource(data.getIconResourceId());
+            if( data.getIconResourceId() == Utility.INVALID_ID )
+            {
+                iconImage.setImageResource(R.drawable.user_def);
+            }
+            else
+            {
+                iconImage.setImageResource(data.getIconResourceId());
+            }
+
+            iconImage.setVisibility(View.VISIBLE);
+            iconFrame.setVisibility(View.VISIBLE);
         }
+
 
         TextView selectNoText = (TextView)convertView.findViewById(R.id.select_no);
         selectNoText.setText("SELECT:" + data.getListNo());
