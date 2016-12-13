@@ -1,6 +1,7 @@
 package jp.co.gnavi.meshclient.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -9,12 +10,10 @@ import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.location.places.UserDataType;
 
@@ -33,11 +32,14 @@ import jp.co.gnavi.meshclient.R;
 import jp.co.gnavi.meshclient.common.Define;
 import jp.co.gnavi.meshclient.common.Utility;
 import jp.co.gnavi.meshclient.data.UserData;
+import jp.co.gnavi.meshclient.gcm.GcmRegistration;
 
 /**
+ * スプラッシュ＆ログイン画面
+ *
  * Created by kaifuku on 2016/10/05.
  */
-public class SplashActivity extends BaseActivity implements TextWatcher{
+public class SplashActivity extends BaseActivity implements TextWatcher {
 
     private ArrayList<UserData> mUserDataList = new ArrayList<>();
 
@@ -45,6 +47,8 @@ public class SplashActivity extends BaseActivity implements TextWatcher{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView( R.layout.splash );
+
+        initialize();
     }
 
     @Override
@@ -56,7 +60,9 @@ public class SplashActivity extends BaseActivity implements TextWatcher{
     protected void onResume() {
         super.onResume();
 
-        initialize();
+        // ユーザー情報読み込み。initialize でやっても良いけど、自動ログイン時、遷移が早すぎた。。。
+        // delay 入れるのもめんどいので、ロードをここにずらす。
+        loadUsers();
     }
 
     @Override
@@ -74,11 +80,63 @@ public class SplashActivity extends BaseActivity implements TextWatcher{
         super.onDestroy();
     }
 
+    /////// TextWatcher メソッド
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        ImageView sendImage = (ImageView)findViewById(R.id.send_img);
+        if( s.length() == 0 )
+        {
+            sendImage.setVisibility(View.INVISIBLE);
+        }
+        else
+        {
+            sendImage.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+    }
+    /////// TextWatcher
+
     /**
      * 初期化
      */
     private void initialize() {
+        // utility シングルトンの初期化
         Utility.initialize();
+
+        // テスト用 push トークン取得処理
+        if( Define.PUSH_SERVICE )
+        {
+            final String strRegId = Utility.getSavedStringData( getApplicationContext(), "regist_id" );
+            if( strRegId == null || strRegId.length() == 0 )
+            {
+                startPushService();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        checkRegId();
+                    }
+                }, 1 * 1000);
+            }
+            else
+            {
+                TextView regText = (TextView)findViewById(R.id.registration_id_test);
+                regText.setText(strRegId);
+                regText.setVisibility(View.VISIBLE);
+                regText.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        callMailer(strRegId);
+                    }
+                });
+            }
+        }
 /*
         int height = GNUtility.getDisplayHeight( this );
         int width = GNUtility.getDisplayWidth( this );
@@ -109,30 +167,21 @@ public class SplashActivity extends BaseActivity implements TextWatcher{
 
         EditText editText = (EditText)findViewById(R.id.code_box);
         editText.addTextChangedListener(this);
-
-        loadUsers();
-/*
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                goToNext();
-            }
-        };
-        new Handler().postDelayed( runnable, 3000 );
-*/
     }
 
     /**
      * 次の画面へ
      */
     private void goToNext() {
-//        Intent intent = new Intent( this, WaitActivity.class );
         Intent intent = new Intent( this, SelectAcitivity.class );
         intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP );
         startActivity( intent );
         overridePendingTransition(0, 0);
     }
 
+    /**
+     * ユーザー情報読み込み
+     */
     private void loadUsers()
     {
         if( !GNUtility.isConnection( getApplicationContext() ) )
@@ -179,6 +228,7 @@ public class SplashActivity extends BaseActivity implements TextWatcher{
                         mUserDataList.add(user);
                     }
 
+                    // 既に一度でもログインしていた場合、そのユーザーがユーザーリストにあるかチェックし、あれば自動ログイン
                     String strOwnUser = Utility.getSavedStringData(getApplicationContext(), "code");
                     if( checkUser( strOwnUser ) )
                     {
@@ -202,6 +252,13 @@ public class SplashActivity extends BaseActivity implements TextWatcher{
         connection.start();
     }
 
+    /**
+     * 指定ユーザーがユーザーリストに存在するかどうかチェック
+     *
+     * @param strUser       ユーザー名
+     *
+     * @return      true：存在     false：存在しない
+     */
     private Boolean checkUser( String strUser )
     {
         if( strUser == null || strUser.length() == 0 )
@@ -226,26 +283,59 @@ public class SplashActivity extends BaseActivity implements TextWatcher{
         return false;
     }
 
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+    /**
+     * テスト用 push トークン取得サービス開始
+     */
+    private void startPushService()
+    {
+        Intent intent = new Intent(this, GcmRegistration.class);
+        startService(intent);
     }
 
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-        ImageView sendImage = (ImageView)findViewById(R.id.send_img);
-        if( s.length() == 0 )
+    /**
+     * テスト用 push トークンメール飛ばし
+     *
+     * @param strRegId      registration ID
+     */
+    private void callMailer(String strRegId){
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SENDTO);
+
+        intent.setType("text/plain");
+        intent.setData(Uri.parse("mailto:"));
+        intent.putExtra(Intent.EXTRA_SUBJECT, "REG ID");
+        intent.putExtra(Intent.EXTRA_TEXT, strRegId);
+
+        startActivity(Intent.createChooser(intent, null));
+    }
+
+    /**
+     * テスト用 push トークン取得待ち・トークン表示処理
+     */
+    private void checkRegId()
+    {
+        final String getRegId = Utility.getSavedStringData(getApplicationContext(), "regist_id");
+        if( getRegId == null || getRegId.length() == 0 )
         {
-            sendImage.setVisibility(View.INVISIBLE);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    checkRegId();
+                }
+            }, 1 * 1000);
         }
         else
         {
-            sendImage.setVisibility(View.VISIBLE);
+            TextView regText = (TextView)findViewById(R.id.registration_id_test);
+            regText.setText(getRegId);
+            regText.setVisibility(View.VISIBLE);
+            regText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    callMailer(getRegId);
+                }
+            });
         }
     }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-
-    }
 }
+

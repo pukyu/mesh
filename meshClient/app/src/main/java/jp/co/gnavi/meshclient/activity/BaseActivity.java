@@ -1,6 +1,7 @@
 package jp.co.gnavi.meshclient.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
@@ -16,15 +17,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.nio.charset.Charset;
-
 import jp.co.gnavi.lib.common.GNDefine;
 import jp.co.gnavi.lib.connection.GNCustomUrlConnection;
-import jp.co.gnavi.lib.connection.GNCustomUrlReturnObject;
 import jp.co.gnavi.lib.utility.GNUtility;
 import jp.co.gnavi.meshclient.R;
 import jp.co.gnavi.meshclient.common.Define;
@@ -34,19 +28,46 @@ import jp.co.gnavi.meshclient.common.Utility;
  * Created by kaifuku on 2016/10/05.
  */
 public class BaseActivity extends Activity {
-    private SoundPool mSoundPool = null;
+    static private SoundPool mSoundPool = null;
+    static private int mLoopStremId = Utility.INVALID_ID;
 
     // 上部矢印アニメーションのそれぞれの開始間隔
     protected static final int ARROW_DELAY = 400;
+
+    // アルファダウンアニメーションリクエスト番号
+    protected static final int ALPHA_DOWN_ANIM = 0;
+    // アルファアップアニメーションリクエスト番号
+    protected static final int ALPHA_UP_ANIM = ALPHA_DOWN_ANIM + 1;
+
+    // 矢印アルファダウンアニメーション時間
+    protected static final int FLOW_ALPHA_ANIM_DOWN_DURATION = 1000;
+    // 矢印アルファアップアニメーション時間
+    protected static final int FLOW_ALPHA_ANIM_UP_DURATION = 700;
+    // エラーアニメーション時間
+    private static final int ERROR_ANIM_DURATION = 2000;
+
+    // 矢印アニメーションの状態     true:アニメーション中   false:アニメーション停止中
+    protected Boolean mbStateArrawAnimation = false;
+
+    static private int miSoundResouceID[] = {
+        Utility.INVALID_ID, Utility.INVALID_ID, Utility.INVALID_ID, Utility.INVALID_ID, Utility.INVALID_ID};
+
+    final static protected int SOUND_PREPARE = 0;
+    final static protected int SOUND_WARNING = SOUND_PREPARE + 1;
+    final static protected int SOUND_START = SOUND_WARNING + 1;
+    final static protected int SOUND_WIN = SOUND_START + 1;
+    final static protected int SOUND_LOSE = SOUND_WIN + 1;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // フルスクリーン化
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
+        // エラービュー準備
         View errorLayout = (View)findViewById(R.id.error_root);
         if( errorLayout != null )
         {
@@ -80,16 +101,22 @@ public class BaseActivity extends Activity {
     }
 
     // とりあえずの固定サウンド。。。もっと使う時に汎用的に。。。
-    protected int initializeSound()
+    static public void initializeSound( Context context )
     {
-/*
-        mSoundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
-        return mSoundPool.load(getApplicationContext(), R.raw.decision13, 0);
-*/
-        return 1;
+        if( mSoundPool != null )
+        {
+            return;
+        }
+
+        mSoundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
+        miSoundResouceID[SOUND_PREPARE] = mSoundPool.load(context, R.raw.prepare, 0);
+        miSoundResouceID[SOUND_WARNING] = mSoundPool.load(context, R.raw.warning, 0);
+        miSoundResouceID[SOUND_START] = mSoundPool.load(context, R.raw.start, 0);
+        miSoundResouceID[SOUND_WIN] = mSoundPool.load(context, R.raw.win, 0);
+        miSoundResouceID[SOUND_LOSE] = mSoundPool.load(context, R.raw.lose, 0);
     }
 
-    protected void releaseSound()
+    static public void releaseSound()
     {
         if(mSoundPool == null)
         {
@@ -100,25 +127,41 @@ public class BaseActivity extends Activity {
         mSoundPool = null;
     }
 
-    protected void playSound( int iSoundId )
+    protected void playSound( int iSoundType )
     {
-        if( mSoundPool == null )
+        if( mSoundPool == null || miSoundResouceID.length <= iSoundType || iSoundType < 0 )
         {
             return;
         }
 
-//        mSoundPool.play(iSoundId, 1.0f, 1.0f, 0, 0, 1.0f);
+        int iLoop = 0;
+        if( iSoundType == SOUND_WARNING )
+        {
+            iLoop = -1;
+        }
+
+        stopSound();
+        mLoopStremId = mSoundPool.play(miSoundResouceID[iSoundType], 1.0f, 1.0f, 0, iLoop, 1.0f);
+    }
+
+    protected void stopSound()
+    {
+        if( mSoundPool == null || mLoopStremId == Utility.INVALID_ID )
+        {
+            return;
+        }
+
+        mSoundPool.stop(mLoopStremId);
+        mLoopStremId = Utility.INVALID_ID;
     }
 
     /**
-     * 矢印がある画面でのみ使うこと
+     * 矢印アルファアニメーション開始
+     *
+     * @note    矢印が画面にある場合のみ使用すること
      */
     protected void startArrowAnimation()
     {
-/*
-        ImageView leftArrow = (ImageView)findViewById(R.id.left_arrow_3);
-        setRoopFlowAlphaAnimation(leftArrow, ALPHA_DOWN_ANIM);
-*/
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -135,10 +178,6 @@ public class BaseActivity extends Activity {
             }
         }, ARROW_DELAY*2 );
 
-/*
-        ImageView rightArrow = (ImageView)findViewById(R.id.right_arrow_3);
-        setRoopFlowAlphaAnimation(rightArrow, ALPHA_DOWN_ANIM);
-*/
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -154,70 +193,40 @@ public class BaseActivity extends Activity {
                 setRoopFlowAlphaAnimation(rightArrow, ALPHA_DOWN_ANIM);
             }
         }, ARROW_DELAY*2 );
-
-/*
-        View lineViewLeft = (View)findViewById(R.id.line_view_left);
-        setRoopLineAlphaAnimation(lineViewLeft, ALPHA_DOWN_ANIM);
-
-        View lineViewRight = (View)findViewById(R.id.line_view_right);
-        setRoopLineAlphaAnimation(lineViewRight, ALPHA_DOWN_ANIM);
-*/
     }
 
-    protected static final int ALPHA_DOWN_ANIM = 0;
-    protected static final int ALPHA_UP_ANIM = ALPHA_DOWN_ANIM + 1;
-
-    protected static final int LINE_ALPHA_ANIM_DURATION = 500;
-
-    protected void setRoopLineAlphaAnimation(final View view, final int iAnimType )
+    /**
+     * 矢印アルファアニメーションクリア
+     *
+     * @note    矢印が画面にある場合のみ使用すること
+     */
+    protected void clearArrawAnimation()
     {
-        AlphaAnimation alpha;
-        if( iAnimType == ALPHA_DOWN_ANIM )
-        {
-            alpha = new AlphaAnimation( 1.0f, 0.9f );
-            alpha.setDuration( LINE_ALPHA_ANIM_DURATION );
-        }
-        else if( iAnimType == ALPHA_UP_ANIM )
-        {
-            alpha = new AlphaAnimation( 0.9f, 1.0f );
-            alpha.setDuration( LINE_ALPHA_ANIM_DURATION );
-        }
-        else
-        {
-            return;
-        }
-        alpha.setInterpolator( new LinearInterpolator() );
-        alpha.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
+        ImageView leftArraw3 = (ImageView)findViewById(R.id.left_arrow_3);
+        leftArraw3.clearAnimation();
 
-            }
+        ImageView leftArraw2 = (ImageView)findViewById(R.id.left_arrow_2);
+        leftArraw2.clearAnimation();
 
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                if( iAnimType == ALPHA_DOWN_ANIM )
-                {
-                    setRoopFlowAlphaAnimation( view, ALPHA_UP_ANIM );
-                }
-                else if( iAnimType == ALPHA_UP_ANIM )
-                {
-                    setRoopFlowAlphaAnimation( view, ALPHA_DOWN_ANIM );
-                }
-            }
+        ImageView leftArraw1 = (ImageView)findViewById(R.id.left_arrow_1);
+        leftArraw1.clearAnimation();
 
-            @Override
-            public void onAnimationRepeat(Animation animation) {
+        ImageView rightArraw3 = (ImageView)findViewById(R.id.right_arrow_3);
+        rightArraw3.clearAnimation();
 
-            }
-        });
+        ImageView rightArraw2 = (ImageView)findViewById(R.id.right_arrow_2);
+        rightArraw2.clearAnimation();
 
-        view.clearAnimation();
-        view.setAnimation( alpha );
+        ImageView rightArraw1 = (ImageView)findViewById(R.id.right_arrow_1);
+        rightArraw1.clearAnimation();
     }
 
-    protected static final int FLOW_ALPHA_ANIM_DOWN_DURATION = 1000;
-    protected static final int FLOW_ALPHA_ANIM_UP_DURATION = 700;
-
+    /**
+     * アルファアニメーションループリクエスト処理
+     *
+     * @param view              アニメーション対象ビュー
+     * @param iAnimType         アニメーションタイプ（ALPHA_DOWN_ANIM or ALPHA_UP_ANIM）
+     */
     protected void setRoopFlowAlphaAnimation( final View view, final int iAnimType )
     {
         AlphaAnimation alpha;
@@ -270,31 +279,14 @@ public class BaseActivity extends Activity {
         view.setAnimation( alpha );
     }
 
-    protected void clearArrawAnimation()
-    {
-        ImageView leftArraw3 = (ImageView)findViewById(R.id.left_arrow_3);
-        leftArraw3.clearAnimation();
 
-        ImageView leftArraw2 = (ImageView)findViewById(R.id.left_arrow_2);
-        leftArraw2.clearAnimation();
-
-        ImageView leftArraw1 = (ImageView)findViewById(R.id.left_arrow_1);
-        leftArraw1.clearAnimation();
-
-        ImageView rightArraw3 = (ImageView)findViewById(R.id.right_arrow_3);
-        rightArraw3.clearAnimation();
-
-        ImageView rightArraw2 = (ImageView)findViewById(R.id.right_arrow_2);
-        rightArraw2.clearAnimation();
-
-        ImageView rightArraw1 = (ImageView)findViewById(R.id.right_arrow_1);
-        rightArraw1.clearAnimation();
-    }
-
-
-    protected Boolean mbStateArrawAnimation = false;
-
-
+    /**
+     * 指定上司の情報取得
+     *
+     * @param strBossID     上司 ID
+     *
+     * @note 結果は callbackBossInformation メソッドで返却されるので override して処理を記述すること
+     */
     protected void getBossInformation( final String strBossID )
     {
         if( !GNUtility.isConnection( getApplicationContext() ) )
@@ -314,12 +306,25 @@ public class BaseActivity extends Activity {
         connection.start();
     }
 
-
+    /**
+     * 上司情報取得 API コールバック
+     *
+     * @param msg       取得データ
+     *
+     * @note getBossInformation 使用時は override してデータ取得後の処理を記述すること
+     */
     protected void callbackBossInformation( Message msg )
     {
     }
 
-    private static final int ERROR_ANIM_DURATION = 2000;
+    /**
+     * 汎用エラー表示
+     *
+     * @param strTitle          タイトル
+     * @param strDetail         詳細
+     *
+     * @return  表示の成否
+     */
     protected Boolean drawError( String strTitle, String strDetail )
     {
         final RelativeLayout errorLayout = (RelativeLayout)findViewById(R.id.error_root);
@@ -342,6 +347,8 @@ public class BaseActivity extends Activity {
             public void onClick(View v) {
                 errorLayout.setVisibility(View.GONE);
                 animView.clearAnimation();
+
+                stopSound();
             }
         });
 
@@ -354,7 +361,8 @@ public class BaseActivity extends Activity {
 
         errorLayout.setVisibility(View.VISIBLE);
 
+        playSound(SOUND_WARNING);
+
         return true;
     }
-
 }

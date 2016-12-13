@@ -115,6 +115,8 @@ public class ResultActivity extends BaseActivity
                 }, STAR_GLITTER_DURATION);
             }
         }
+
+//        initializeSound();
     }
 
     @Override
@@ -123,6 +125,7 @@ public class ResultActivity extends BaseActivity
 
         clearStartAnimation();
         clearArrawAnimation();
+//        releaseSound();
         mbStateArrawAnimation = false;
     }
 
@@ -237,6 +240,8 @@ public class ResultActivity extends BaseActivity
                 layout.clearAnimation();
                 layout.setVisibility(View.VISIBLE);
                 layout.setAnimation(scale);
+
+                playSound(SOUND_WIN);
             }
         },  RESULT_ANIMATION_DELAY );
 
@@ -270,6 +275,8 @@ public class ResultActivity extends BaseActivity
                 layout.clearAnimation();
                 layout.setVisibility(View.VISIBLE);
                 layout.setAnimation(alpha);
+
+                playSound(SOUND_LOSE);
             }
         },  RESULT_ANIMATION_DELAY );
 
@@ -305,6 +312,8 @@ public class ResultActivity extends BaseActivity
                 layout.clearAnimation();
                 layout.setVisibility(View.VISIBLE);
                 layout.setAnimation(alpha);
+
+                playSound(SOUND_LOSE);
             }
         },  RESULT_ANIMATION_DELAY );
 

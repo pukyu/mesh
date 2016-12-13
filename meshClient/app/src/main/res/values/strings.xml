@@ -14,4 +14,5 @@
     <string name="network_error">回線接続異常発生!!</string>
     <string name="code_error">不正侵入者確認!!</string>
     <string name="data_error">異常受信発生!!</string>
+    <string name="push_project_id">471351544919</string>
 </resources>

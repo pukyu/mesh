@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,7 +15,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
@@ -31,9 +29,10 @@ import jp.co.gnavi.meshclient.common.Utility;
 import jp.co.gnavi.meshclient.data.SelectListData;
 
 /**
+ * 上司選択画面
+ *
  * Created by cheshirecat on 2016/10/16.
  */
-
 public class SelectAcitivity extends BaseActivity
 {
     private int miSoundId;
@@ -43,6 +42,7 @@ public class SelectAcitivity extends BaseActivity
     public boolean dispatchKeyEvent(KeyEvent e) {
         // 戻るボタンが押されたとき
         if(e.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+            // この前はログイン画面。ログアウト機能はないので戻せない。
             return true;
         }
 
@@ -52,7 +52,6 @@ public class SelectAcitivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.select_list);
 
         initalize();
@@ -62,6 +61,7 @@ public class SelectAcitivity extends BaseActivity
     protected void onStart() {
         super.onStart();
 
+        // 上司データのロード。セレクト画面にはあちこちから戻ってこれるので、ここで呼んで都度最新データを取り直す。
         load();
     }
 
@@ -74,7 +74,6 @@ public class SelectAcitivity extends BaseActivity
         mbStateArrawAnimation = false;
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -82,18 +81,18 @@ public class SelectAcitivity extends BaseActivity
         if( !mbStateArrawAnimation )
         {
             mbStateArrawAnimation = true;
+            // ここでヘッダ矢印アニメーション開始。
+            // ここでやらないと、画面ロック→解除とやられると、全矢印が同じタイミングで点滅してしまう。
             startArrowAnimation();
         }
-
-        miSoundId = initializeSound();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-
+        // 矢印アニメーションを解除。これにより再度 onResume になった時に綺麗にずれて点滅するようになる。
         clearArrawAnimation();
-        releaseSound();
+//        releaseSound();
         mbStateArrawAnimation = false;
     }
 
@@ -107,14 +106,15 @@ public class SelectAcitivity extends BaseActivity
         super.onDestroy();
     }
 
+    /**
+     * 初期化
+     */
     private void initalize()
     {
         ListView list = (ListView)findViewById(R.id.select_list);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                playSound( miSoundId );
-
                 Intent intent = new Intent( getApplicationContext(), WaitActivity.class );
                 intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP );
                 intent.putExtra("id", position);
@@ -131,6 +131,9 @@ public class SelectAcitivity extends BaseActivity
         nowLoading.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * 上司データのロード
+     */
     private void load()
     {
         if( !GNUtility.isConnection( getApplicationContext() ) )
@@ -149,6 +152,7 @@ public class SelectAcitivity extends BaseActivity
         Handler handler = new Handler() {
             public void handleMessage(Message msg) {
                 if (msg == null || msg.obj == null) {
+                    drawError(getResources().getString(R.string.alart_title), getResources().getString(R.string.network_error));
                     return;
                 }
 
@@ -160,12 +164,6 @@ public class SelectAcitivity extends BaseActivity
                     JSONObject json = new JSONObject(strObject);
                     JSONArray arrayData = json.getJSONArray("data");
                     makeList( arrayData );
-/*
-                    JSONObject data = json.getJSONObject("data");
-                    JSONObject listUser = data.getJSONObject("0");
-                    String strName = listUser.getString("name");
-*/
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                     drawError(getResources().getString(R.string.alart_title), getResources().getString(R.string.network_error));
@@ -178,6 +176,11 @@ public class SelectAcitivity extends BaseActivity
         connection.start();
     }
 
+    /**
+     * 上司リスト生成
+     *
+     * @param data      上司リストの json
+     */
     private void makeList( JSONArray data )
     {
         mTargetData.clear();
@@ -202,18 +205,7 @@ public class SelectAcitivity extends BaseActivity
                 listData.setTargetName(strName);
                 listData.setStartTime(strTime);
 
-                if( strIconUrl == null || strIconUrl.equals("null") )
-                {
-                    if( strNumber.contentEquals("1") )
-                    {
-                        listData.setIconResourceId(R.drawable.matsumura);
-                    }
-                    else if( strNumber.contentEquals("2") )
-                    {
-                        listData.setIconResourceId(R.drawable.seki);
-                    }
-                }
-                else
+                if( strIconUrl != null && !strIconUrl.equals("null") )
                 {
                     listData.setIconImageUrl(strIconUrl);
                 }
@@ -227,53 +219,6 @@ public class SelectAcitivity extends BaseActivity
 
         }
 
-
-
-/*
-        for( int i = 0 ; i < 5 ; i++ )
-        {
-            SelectListData data = new SelectListData();
-            if( i*0.1 < 1)
-            {
-                data.setListNo("SELECT:0" + i);
-            }
-            else
-            {
-                data.setListNo("SELECT:" + i);
-            }
-            data.setTeam("○○部");
-            data.setTargetName("？？？？？");
-
-            adapter.add(data);
-        }
-*/
-/*
-        SelectListData dataTaki = new SelectListData();
-        dataTaki.setListNo("SELECT:01");
-        dataTaki.setTeam("Z14 推進期間");
-        dataTaki.setTargetName("滝 久雄");
-
-        SelectListData dataKubo = new SelectListData();
-        dataKubo.setListNo("SELECT:02");
-        dataKubo.setTeam("Z14 推進期間");
-        dataKubo.setTargetName("久保 征一郎");
-
-        SelectListData dataMatsu = new SelectListData();
-        dataMatsu.setListNo("SELECT:03");
-        dataMatsu.setTeam("Z14 推進期間 第一開発部 主任");
-        dataMatsu.setTargetName("松村 翔子");
-        dataMatsu.setIconResourceId(R.drawable.matsumura);
-
-        SelectListData dataYama = new SelectListData();
-        dataYama.setListNo("SELECT:04");
-        dataYama.setTeam("Z14 推進期間 第一開発部 主任");
-        dataYama.setTargetName("山田 太郎");
-
-        mTargetData.add(dataTaki);
-        mTargetData.add(dataKubo);
-        mTargetData.add(dataMatsu);
-        mTargetData.add(dataYama);
-*/
         for( int i = 0 ; i < mTargetData.size() ; i++ )
         {
             adapter.add(mTargetData.get(i));
@@ -288,5 +233,4 @@ public class SelectAcitivity extends BaseActivity
 
         list.setVisibility(View.VISIBLE);
     }
-
 }

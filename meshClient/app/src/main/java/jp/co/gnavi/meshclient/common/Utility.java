@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -14,6 +15,8 @@ import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
 
 import java.util.Set;
+
+import static android.support.v7.appcompat.R.styleable.AlertDialog;
 
 /**
  * Created by kaifuku on 2016/10/05.
@@ -65,7 +68,6 @@ public class Utility {
         SharedPreferences data = context.getSharedPreferences(SharedPreferenceName, Context.MODE_PRIVATE);
         return data.getInt(strKey, INVALID_ID);
     }
-
 
     /**
      * ログ出力
@@ -161,5 +163,6 @@ public class Utility {
         Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE );
         activity.startActivityForResult( intent, iRequestCode );
     }
+
 
 }

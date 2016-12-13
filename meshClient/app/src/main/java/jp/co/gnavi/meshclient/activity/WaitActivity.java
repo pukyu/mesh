@@ -20,7 +20,6 @@ import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mlkcca.client.DataElement;
 import com.mlkcca.client.DataStore;
@@ -50,11 +49,11 @@ import jp.co.gnavi.meshclient.common.Utility;
 import jp.co.gnavi.meshclient.data.SelectListData;
 
 /**
+ * 開始待ち画面
+ *
  * Created by kaifuku on 2016/10/12.
  */
 public class WaitActivity extends BaseActivity {
-    private int miSoundId;
-
     // 一番外側の円アニメーション時間（ミリ秒）
     private static final int    CIRCLE4_ANIMATE_DURATION = 90000;
     // 内側から 3 番目の円アニメーション時間（ミリ秒）
@@ -64,15 +63,16 @@ public class WaitActivity extends BaseActivity {
     // 一番内側の円アニメーション時間（ミリ秒）
     private static final int    CIRCLE1_ANIMATE_DURATION = 4000;
 
-    // カウントダウン
+    // カウントダウン値
     private int miNowCount;
-
+    // 開始までの時間（画面上部に表示される時間）
     private int miDrawTime = Utility.INVALID_ID;
 
     // 状態
     private static final int STATE_WAIT = 0;
     private static final int STATE_READY = STATE_WAIT + 1;
     private static final int STATE_START = STATE_READY + 1;
+    // 現在の状態
     private int miState = STATE_WAIT;
 
     // PUSHプラットフォーム
@@ -119,7 +119,7 @@ public class WaitActivity extends BaseActivity {
             startArrowAnimation();
         }
 
-        miSoundId = initializeSound();
+//        initializeSound();
     }
 
     @Override
@@ -127,7 +127,7 @@ public class WaitActivity extends BaseActivity {
         super.onPause();
 
         clearArrawAnimation();
-        releaseSound();
+//        releaseSound();
         mbStateArrawAnimation = false;
     }
 
@@ -140,7 +140,10 @@ public class WaitActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        dataStore.removeDataStoreEventListener();
+        if( dataStore != null )
+        {
+            dataStore.removeDataStoreEventListener();
+        }
         dataStore = null;
         milkCocoa = null;
     }
@@ -491,6 +494,8 @@ public class WaitActivity extends BaseActivity {
         setOverlayColorFilter( STATE_WAIT );
         setFlashAnimation();
 
+        playSound(SOUND_PREPARE);
+
         final ImageView circle4 = (ImageView)findViewById(R.id.circle_4);
         final int iPoint4 = circle4.getWidth()/2;
         float fEndRotate4 = ( 360.0f / ( CIRCLE4_ANIMATE_DURATION / 1000.0f ) ) * (CLOSE_ANIM_DURATION / 1000.0f);
@@ -536,6 +541,8 @@ public class WaitActivity extends BaseActivity {
         miState = STATE_READY;
         miNowCount = 11;
         mbRestFiveCountDownStart = false;
+
+        playSound(SOUND_WARNING);
 
         setDisplayColorFilter(getResources().getColor(R.color.yellow));
         setOverlayColorFilter( STATE_READY );
@@ -679,6 +686,9 @@ public class WaitActivity extends BaseActivity {
         }
 
         miState = STATE_START;
+
+        stopSound();
+        playSound(SOUND_START);
 
         setDisplayColorFilter(getResources().getColor(R.color.pink));
         setOverlayColorFilter( STATE_START );

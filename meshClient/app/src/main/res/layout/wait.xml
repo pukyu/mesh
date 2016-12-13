@@ -105,7 +105,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/state_sub_title"
-            android:layout_below="@+id/sub_titile"
             android:visibility="invisible">
 
             <TextView
@@ -178,7 +177,7 @@
 
             <TextView
                 android:text="？？？"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:id="@+id/wait_time"
                 android:layout_centerHorizontal="true"
                 android:textColor="@color/white"
@@ -304,7 +303,6 @@
         android:layout_alignParentEnd="false"
         android:layout_alignParentRight="true"
         android:src="@drawable/btn_select"
-        android:layout_alignBottom="@+id/infor_detail"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_alignParentBottom="true"

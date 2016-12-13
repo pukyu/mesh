@@ -15,6 +15,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import jp.co.gnavi.meshclient.R;
 import jp.co.gnavi.meshclient.activity.MainActivity;
+import jp.co.gnavi.meshclient.activity.SplashActivity;
 
 /**
  * Created by kaifuku on 2016/10/06.
@@ -56,7 +57,7 @@ public class GcmIntentService extends IntentService {
         final NotificationManager notificationManager = (NotificationManager)
                 this.getSystemService( Context.NOTIFICATION_SERVICE );
 
-        final PendingIntent contentIntent = PendingIntent.getActivity( this, 0, new Intent( this, MainActivity.class ), 0 );
+        final PendingIntent contentIntent = PendingIntent.getActivity( this, 0, new Intent( this, SplashActivity.class ), 0 );
 
         final Uri uri= RingtoneManager.getDefaultUri( RingtoneManager.TYPE_NOTIFICATION );
 

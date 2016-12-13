@@ -9,10 +9,10 @@ android {
     defaultConfig {
         applicationId "jp.co.gnavi.meshclient"
 //        applicationId PACKAGE_NAME
-        minSdkVersion 19
+        minSdkVersion 14
         targetSdkVersion 24
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "1.0.2"
         multiDexEnabled  true
     }
 
@@ -21,19 +21,19 @@ android {
 //            applicationIdSuffix "_dev"
         }
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+            proguardFile 'C:/Users/kaifuku/Desktop/src/native/local/mesh/meshClient/proguard.txt'
 //            applicationIdSuffix "_release"
         }
     }
 
     productFlavors {
         dev {
- //           applicationId "${PACKAGE_NAME}"
+            //           applicationId "${PACKAGE_NAME}"
             manifestPlaceholders = [appName: "上司争奪戦"];
         }
         rel {
- //           applicationId "${PACKAGE_NAME}"
+            //           applicationId "${PACKAGE_NAME}"
             manifestPlaceholders = [appName: "上司争奪戦"];
         }
     }
@@ -44,7 +44,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:24.1.0'
     compile 'com.google.android.gms:play-services:9.4.0'
