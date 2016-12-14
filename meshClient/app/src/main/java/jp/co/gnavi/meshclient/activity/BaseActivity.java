@@ -88,6 +88,8 @@ public class BaseActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
+
+        stopSound();
     }
 
     @Override

@@ -52,7 +52,14 @@ public class SelectAcitivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.select_list);
+
+        if( Utility.isTablet( getApplicationContext() ) )
+        {
+            setContentView(R.layout.select_tablet_list);
+        }
+        else {
+            setContentView(R.layout.select_list);
+        }
 
         initalize();
     }

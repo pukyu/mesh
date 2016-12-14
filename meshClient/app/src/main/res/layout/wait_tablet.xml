@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+    android:background="@color/black">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/gu_bg"
+        android:id="@+id/imageView"
+        android:adjustViewBounds="true"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="60dp"/>
+
+    <ImageView
+        android:src="@drawable/lock_on_1"
+        android:id="@+id/circle_1"
+        android:cropToPadding="false"
+        android:layout_alignParentTop="false"
+        android:adjustViewBounds="true"
+        android:padding="192dp"
+        android:layout_centerInParent="true"
+        android:layout_alignTop="@+id/user_layout"
+        android:layout_alignBottom="@+id/user_layout"
+        android:layout_width="666dp"
+        android:layout_height="666dp"/>
+
+    <RelativeLayout
+        android:id="@+id/user_layout"
+        android:layout_width="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/state_detail"
+        android:layout_above="@+id/user_status"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_centerInParent="true"
+            android:id="@+id/anim_layout"
+            android:layout_width="560dp"
+            android:layout_height="560dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:src="@drawable/lock_on_4"
+                android:id="@+id/circle_4"
+                android:layout_centerInParent="true"
+                android:adjustViewBounds="true"
+                android:layout_height="match_parent"
+                android:paddingBottom="22dp"
+                />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/lock_on_3"
+                android:id="@+id/circle_3"
+                android:layout_centerInParent="true"
+                android:adjustViewBounds="true"
+                android:layout_margin="32dp" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/lock_on_2"
+                android:id="@+id/circle_2"
+                android:layout_centerInParent="true"
+                android:adjustViewBounds="true"
+                android:layout_margin="93dp"/>
+
+            <ImageView
+                android:src="@drawable/user_def"
+                android:layout_centerVertical="false"
+                android:layout_centerHorizontal="false"
+                android:id="@+id/user_icon"
+                android:layout_centerInParent="true"
+                android:adjustViewBounds="true"
+                android:cropToPadding="false"
+                android:layout_width="267dp"
+                android:layout_height="267dp"/>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <include
+        android:layout_width="wrap_content"
+        android:layout_height="105dp"
+        layout="@layout/header_tablet_layout"
+        android:id="@+id/status_layout"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/state_detail"
+        android:layout_below="@+id/status_layout"
+        android:layout_height="200dp"
+        android:layout_marginTop="10dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/state_sub_title"
+            android:visibility="invisible">
+
+            <TextView
+                android:text="各自争奪戦準備後待機推奨"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/state_sub_text"
+                android:textColor="@color/yellow"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="80dp"
+                android:textSize="48dp"/>
+        </RelativeLayout>
+
+        <TextView
+            android:text="上司着席待"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/sub_title"
+            android:textColor="@color/gray"
+            android:layout_centerHorizontal="true"
+            android:textSize="30dp"/>
+
+        <RelativeLayout
+            android:id="@+id/wait_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="15dp"
+            android:layout_below="@+id/sub_title">
+
+            <TextView
+                android:text="WAIT TIME"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/wait_text"
+                android:textColor="@color/themeColor"
+                android:layout_alignRight="@+id/about_text"
+                android:layout_toLeftOf="@+id/wait_time"
+                android:textSize="32dp"/>
+
+            <TextView
+                android:text="MINUTES"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/minute"
+                android:textColor="@color/themeColor"
+                android:layout_alignLeft="@+id/minute_text"
+                android:textSize="32dp"/>
+
+            <TextView
+                android:text="分待"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/minute_text"
+                android:layout_toRightOf="@+id/wait_time"
+                android:textColor="@color/white"
+                android:layout_centerVertical="false"
+                android:layout_alignParentBottom="false"
+                android:layout_below="@+id/minute"
+                android:textSize="40dp"/>
+
+            <FrameLayout
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="false"
+                android:background="@drawable/text_frame"
+                android:id="@+id/text_frame_layout"
+                android:layout_width="240dp"
+                android:layout_height="88dp">
+
+            </FrameLayout>
+
+            <TextView
+                android:text="？？？"
+                android:layout_height="match_parent"
+                android:id="@+id/wait_time"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/white"
+                android:textAlignment="center"
+                android:layout_alignParentBottom="false"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_alignTop="@+id/text_frame_layout"
+                android:layout_alignBottom="@+id/text_frame_layout"
+                android:layout_width="240dp"
+                android:textSize="64dp"/>
+
+            <TextView
+                android:text="大体"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/about_text"
+                android:textColor="@color/white"
+                android:layout_toLeftOf="@+id/wait_time"
+                android:layout_centerInParent="false"
+                android:textAllCaps="false"
+                android:layout_centerVertical="false"
+                android:layout_centerHorizontal="false"
+                android:layout_alignParentBottom="false"
+                android:layout_below="@+id/wait_text"
+                android:textSize="40dp"/>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/user_status"
+        android:layout_marginBottom="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="false"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="false"
+            android:id="@+id/infor_detail">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="false"
+                android:id="@+id/target_layout"
+                android:layout_centerHorizontal="true">
+
+                <TextView
+                    android:text="@string/target_string"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/target_title"
+                    android:layout_centerHorizontal="true"
+                    android:textColor="@color/themeColor"
+                    android:textSize="32dp"/>
+
+                <TextView
+                    android:text="？？？？"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/user_name"
+                    android:textColor="@color/white"
+                    android:ellipsize="end"
+                    android:layout_centerHorizontal="true"
+                    android:textAlignment="center"
+                    android:layout_below="@+id/group_name"
+                    android:layout_marginTop="6dp"
+                    android:textSize="56dp"
+                    android:layout_width="534dp"/>
+
+                <TextView
+                    android:text="○○部"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/group_name"
+                    android:textColor="@color/white"
+                    android:layout_below="@+id/target_title"
+                    android:ellipsize="end"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="9dp"
+                    android:textSize="32dp"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/infor_layout"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/target_layout"
+                android:layout_marginTop="12dp">
+
+                <TextView
+                    android:text="@string/information_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/infor_title"
+                    android:textColor="@color/themeColor"
+                    android:layout_centerHorizontal="true"
+                    android:textSize="32dp"/>
+
+                <TextView
+                    android:text="他部下３名待機中..."
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/infor_text"
+                    android:layout_centerInParent="true"
+                    android:layout_below="@+id/infor_title"
+                    android:textColor="@color/white"
+                    android:layout_marginTop="6dp"
+                    android:textSize="30dp"/>
+            </RelativeLayout>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/reselect"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/btn_select"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"/>
+
+    <include
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        layout="@layout/color_overlay"
+        android:visibility="gone"
+        android:id="@+id/overlay_layout"/>
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/error_layout"
+        android:id="@+id/error_root"
+        android:visibility="gone"/>
+
+
+</RelativeLayout>

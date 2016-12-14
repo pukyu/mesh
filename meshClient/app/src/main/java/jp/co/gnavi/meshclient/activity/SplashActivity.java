@@ -46,7 +46,18 @@ public class SplashActivity extends BaseActivity implements TextWatcher {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView( R.layout.splash );
+
+        // utility シングルトンの初期化
+        Utility.initialize();
+
+        if( Utility.isTablet( getApplicationContext() ) )
+        {
+            setContentView( R.layout.splash_tablet );
+        }
+        else
+        {
+            setContentView( R.layout.splash );
+        }
 
         initialize();
     }
@@ -107,8 +118,6 @@ public class SplashActivity extends BaseActivity implements TextWatcher {
      * 初期化
      */
     private void initialize() {
-        // utility シングルトンの初期化
-        Utility.initialize();
 
         // テスト用 push トークン取得処理
         if( Define.PUSH_SERVICE )

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/black"
+    >
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/imageView"
+        android:adjustViewBounds="true"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/gu_bg"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="60dp"/>
+
+    <ImageView
+        android:layout_height="wrap_content"
+        android:id="@+id/title"
+        android:adjustViewBounds="true"
+        android:src="@drawable/title"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_width="match_parent"
+        android:paddingLeft="200dp"
+        android:paddingRight="200dp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/user_layout"
+        android:layout_marginBottom="81dp"
+        android:background="@drawable/text_frame"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginRight="50dp"
+        android:layout_marginLeft="50dp">
+
+        <ImageView
+            android:src="@drawable/gu_y_r"
+            android:id="@+id/send_img"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_height="match_parent"
+            android:layout_alignTop="@+id/code_box"
+            android:layout_alignBottom="@+id/code_box"
+            android:layout_centerInParent="false"
+            android:layout_centerHorizontal="false"
+            android:background="@color/clear"
+            android:layout_marginRight="30dp"
+            android:adjustViewBounds="true"
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp"
+            android:layout_width="50dp"/>
+
+        <EditText
+            android:inputType="textEmailAddress"
+            android:ems="12"
+            android:id="@+id/code_box"
+            android:textColor="@color/white"
+            android:layout_centerVertical="true"
+            android:singleLine="true"
+            android:paddingLeft="26dp"
+            android:paddingRight="26dp"
+            android:textCursorDrawable="@color/white"
+            android:hint="STAFF NAME"
+            android:textColorHint="@color/lightGray"
+            android:autoLink="none"
+            android:background="@color/clear"
+            android:layout_height="120dp"
+            android:textSize="30dp"
+            android:layout_width="match_parent"
+            android:layout_toLeftOf="@+id/send_img"
+            android:gravity="left|center_vertical"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/registration_id_test"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:visibility="gone"/>
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/error_layout"
+        android:visibility="gone"
+        android:id="@+id/error_root"/>
+
+</RelativeLayout>

@@ -27,6 +27,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.nio.charset.Charset;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -72,7 +73,14 @@ public class ResultActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.result_layout);
+        if( Utility.isTablet( getApplicationContext() ) )
+        {
+            setContentView(R.layout.result_tablet_layout);
+        }
+        else
+        {
+            setContentView(R.layout.result_layout);
+        }
 
         Intent intent = getIntent();
         mTargetData = (SelectListData) intent.getSerializableExtra("target");
@@ -816,6 +824,7 @@ public class ResultActivity extends BaseActivity
             int iMax = array.length() > 3 ? array.length() - 3 : 0;
             int iResourceIndex = 0;
             long lBaseTime = Utility.INVALID_ID;
+            long lAddTime = 0;
             for( int i = array.length() - 1; i >= iMax ; i--, iResourceIndex++ )
             {
                 TextView name = (TextView)findViewById(mResultTextIDs[iResourceIndex]);
@@ -848,10 +857,23 @@ public class ResultActivity extends BaseActivity
                         // フライングが起きる可能性有
                         if( mBaseTime - lTime > 0 )
                         {
-                            time.setText( "00:00:000" );
+//                            time.setText( "00:00:000" );
+                            Date date = new Date( mBaseTime - lTime + lAddTime );
+                            SimpleDateFormat format = new SimpleDateFormat("mm:ss:SSS");
+                            String strCalcTime = format.format(date);
+                            String strMilliSec = strCalcTime.substring(6);
+                            time.setText( "00:00:" + strMilliSec );
+
+                            // 最初のフライング者のみ、ベースタイムに設定しなおす
+                            if( i == array.length() - 1 )
+                            {
+                                Date subDate = format.parse("00:00:" + strMilliSec);
+                                lAddTime = subDate.getTime();
+                                mBaseTime = lTime;
+                            }
                         }
                         else {
-                            Date date = new Date( lTime - mBaseTime );
+                            Date date = new Date( lTime - mBaseTime + lAddTime );
                             SimpleDateFormat format = new SimpleDateFormat("mm:ss:SSS");
                             time.setText(format.format(date));
                         }
@@ -861,6 +883,9 @@ public class ResultActivity extends BaseActivity
                     String strName = ParsonData.getString("name");
                     name.setText(strName);
                 } catch (JSONException e) {
+                    e.printStackTrace();
+                    miResultType = RESULT_DRAW;
+                } catch (ParseException e) {
                     e.printStackTrace();
                     miResultType = RESULT_DRAW;
                     return;
@@ -912,4 +937,14 @@ public class ResultActivity extends BaseActivity
             rankingText.setText( String.valueOf( array.length() ) + "人中" + String.valueOf(iNumber) + "番目にボタンを押しました");
         }
     }
+
+    private void makeResultData( JSONArray array )
+    {
+
+        for( int i = 0 ; i < array.length() ; i++ )
+        {
+
+        }
+    }
+
 }

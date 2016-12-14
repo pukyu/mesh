@@ -96,7 +96,15 @@ public class WaitActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView( R.layout.wait );
+
+        if( Utility.isTablet( getApplicationContext() ) )
+        {
+            setContentView( R.layout.wait_tablet );
+        }
+        else
+        {
+            setContentView( R.layout.wait );
+        }
 
         Intent intent = getIntent();
         mTargetData = (SelectListData) intent.getSerializableExtra("target");

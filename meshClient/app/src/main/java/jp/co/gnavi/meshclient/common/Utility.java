@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import java.util.Set;
 
+import jp.co.gnavi.meshclient.R;
+
 import static android.support.v7.appcompat.R.styleable.AlertDialog;
 
 /**
@@ -37,6 +39,10 @@ public class Utility {
     public static final void initialize() {
         // コンストラクタでやらせたら、準備が間に合わず null が確実に来たので。。。
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+    }
+
+    public static final Boolean isTablet( Context context ){
+        return context.getResources().getBoolean(R.bool.is_tablet);
     }
 
     public static final void saveStringData( Context context, String strKey, String strData )

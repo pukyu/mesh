@@ -35,7 +35,16 @@ public class SelectListAdapter extends ArrayAdapter<SelectListData> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = mLayoutInflater.inflate(R.layout.select_item, parent, false);
+
+            if( Utility.isTablet( mContext ) )
+            {
+                convertView = mLayoutInflater.inflate(R.layout.select_tablet_item, parent, false);
+            }
+            else
+            {
+                convertView = mLayoutInflater.inflate(R.layout.select_item, parent, false);
+            }
+
         }
 
         SelectListData data = getItem(position);
